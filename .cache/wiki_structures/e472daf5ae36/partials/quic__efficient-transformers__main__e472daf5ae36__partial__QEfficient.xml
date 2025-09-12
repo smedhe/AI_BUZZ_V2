@@ -1,0 +1,150 @@
+<partial_wiki>
+  <sections>
+    <section id="sec-QEfficient-1">
+      <title>Overview</title>
+      <pages>
+        <page id="page-QEfficient-1">
+          <title>QEfficient Overview</title>
+          <description>This is a high-level overview of the QEfficient library.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>QEfficient/__init__.py</file_path>
+            <file_path>QEfficient/README.md</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-QEfficient-2</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-QEfficient-2</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-QEfficient-2">
+      <title>Core Features</title>
+      <pages>
+        <page id="page-QEfficient-2">
+          <title>QEfficient Core Features</title>
+          <description>This section describes the core features of the QEfficient library.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>QEfficient/transformers/models/modeling_auto.py</file_path>
+            <file_path>QEfficient/transformers/models/llama4/modeling_llama4.py</file_path>
+            <file_path>QEfficient/transformers/models/gemma3/modeling_gemma3.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-QEfficient-3</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-QEfficient-3</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-QEfficient-3">
+      <title>Model Integration</title>
+      <pages>
+        <page id="page-QEfficient-3">
+          <title>QEfficient Model Integration</title>
+          <description>This section describes how to integrate models with the QEfficient library.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>QEfficient/transformers/models/llama/modeling_llama.py</file_path>
+            <file_path>QEfficient/transformers/models/gpt_bigcode/modeling_gpt_bigcode.py</file_path>
+            <file_path>QEfficient/transformers/models/gemma/modeling_gemma.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-QEfficient-4</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-QEfficient-4</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-QEfficient-4">
+      <title>Deployment/Infrastructure</title>
+      <pages>
+        <page id="page-QEfficient-4">
+          <title>QEfficient Deployment/Infrastructure</title>
+          <description>This section describes how to deploy and manage the QEfficient library.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>QEfficient/cloud/finetune.py</file_path>
+            <file_path>QEfficient/cloud/export.py</file_path>
+            <file_path>QEfficient/cloud/infer.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-QEfficient-5</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-QEfficient-5</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-QEfficient-5">
+      <title>Examples and Notebooks</title>
+      <pages>
+        <page id="page-QEfficient-5">
+          <title>QEfficient Examples and Notebooks</title>
+          <description>This section provides examples and notebooks for the QEfficient library.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>QEfficient/generation/text_generation_inference.py</file_path>
+            <file_path>QEfficient/finetune/eval.py</file_path>
+            <file_path>QEfficient/finetune/utils/plot_metrics.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-QEfficient-6</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-QEfficient-6</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-QEfficient-6">
+      <title>System Architecture</title>
+      <pages>
+        <page id="page-QEfficient-6">
+          <title>QEfficient System Architecture</title>
+          <description>This section describes the system architecture of the QEfficient library.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>QEfficient/transformers/models/modeling_auto.py</file_path>
+            <file_path>QEfficient/transformers/models/llama4/modeling_llama4.py</file_path>
+            <file_path>QEfficient/transformers/models/gemma3/modeling_gemma3.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-QEfficient-7</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-QEfficient-7</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-QEfficient-7">
+      <title>Extensibility and Customization</title>
+      <pages>
+        <page id="page-QEfficient-7">
+          <title>QEfficient Extensibility and Customization</title>
+          <description>This section describes how to extend and customize the QEfficient library.</description>
+          <importance>low</importance>
+          <relevant_files>
+            <file_path>QEfficient/transformers/models/modeling_auto.py</file_path>
+            <file_path>QEfficient/transformers/models/llama4/modeling_llama4.py</file_path>
+            <file_path>QEfficient/transformers/models/gemma3/modeling_gemma3.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-QEfficient-8</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-QEfficient-8</section_ref>
+      </subsections>
+    </section>
+  </sections>
+</partial_wiki>

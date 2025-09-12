@@ -1,0 +1,96 @@
+<partial_wiki>
+  <sections>
+    <section id="sec-shard1-1">
+      <title>Overview</title>
+      <pages>
+        <page id="page-shard1-1">
+          <title>Introduction to Efficient Transformers</title>
+          <description>This shard provides an overview of the Efficient Transformers library, a collection of optimized transformer models for various tasks.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>README.md</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-shard1-2</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-shard1-2</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-shard1-2">
+      <title>Core Features</title>
+      <pages>
+        <page id="page-shard1-2">
+          <title>Model Integration</title>
+          <description>This section explains how to integrate models into the Efficient Transformers library.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>pyproject.toml</file_path>
+            <file_path>MANIFEST.in</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-shard1-3</related>
+          </related_pages>
+        </page>
+        <page id="page-shard1-3">
+          <title>Model Support</title>
+          <description>This page lists the models supported by the Efficient Transformers library.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>pyproject.toml</file_path>
+            <file_path>MANIFEST.in</file_path>
+            <file_path>CONTRIBUTING.md</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-shard1-4</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-shard1-4</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-shard1-4">
+      <title>Backend Systems</title>
+      <pages>
+        <page id="page-shard1-4">
+          <title>Server and API</title>
+          <description>This section explains the server and API components of the Efficient Transformers library.</description>
+          <importance>low</importance>
+          <relevant_files>
+            <file_path>Dockerfile</file_path>
+            <file_path>.gitignore</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-shard1-5</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-shard1-5</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-shard1-5">
+      <title>Examples and Notebooks</title>
+      <pages>
+        <page id="page-shard1-5">
+          <title>Example Usage</title>
+          <description>This page provides example usage of the Efficient Transformers library.</description>
+          <importance>low</importance>
+          <relevant_files>
+            <file_path>examples/</file_path>
+            <file_path>notebooks/.ipynb</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-shard1-6</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-shard1-6</section_ref>
+      </subsections>
+    </section>
+  </sections>
+</partial_wiki>

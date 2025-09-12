@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "source_url": "https://github.com/quic/efficient-transformers/tree/main",
+    "owner": "quic",
+    "repo": "efficient-transformers",
+    "branch": "main",
+    "subpath": "",
+    "created_at": "2025-09-11T11:45:41Z",
+    "graph_id": "e472daf5ae36",
+    "totals": {
+      "files_scanned": 252,
+      "units": 1559
+    }
+  },
+  "units_path": ".cache/embeddings/e472daf5ae36/units.parquet"
+}

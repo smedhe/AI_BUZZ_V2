@@ -1,0 +1,48 @@
+<partial_wiki>
+  <sections>
+    <section id="sec-examples-1">
+      <title>Examples and Notebooks</title>
+      <pages>
+        <page id="page-examples-1">
+          <title>Text Inference using C++</title>
+          <description>This example demonstrates how to perform text inference using C++.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>examples/cpp_execution/text_inference_using_cpp.py</file_path>
+            <file_path>examples/cpp_execution/InferenceSetIOBuffer.cpp</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-examples-2</related>
+          </related_pages>
+        </page>
+        <page id="page-examples-2">
+          <title>Image Text to Text Inference</title>
+          <description>This example demonstrates how to perform image text to text inference.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>examples/image_text_to_text_inference.py</file_path>
+            <file_path>examples/granite_example/granite_vision_inference.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-examples-1</related>
+          </related_pages>
+        </page>
+        <page id="page-examples-3">
+          <title>LLaMA 4 Multi-Image Example</title>
+          <description>This example demonstrates how to use LLaMA 4 for multi-image inference.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>examples/llama4_multi_image_example.py</file_path>
+            <file_path>examples/llama4_example.py</file_path>
+          </related_files>
+          <related_pages>
+            <related>page-examples-1</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-examples-2</section_ref>
+      </subsections>
+    </section>
+  </sections>
+</partial_wiki>

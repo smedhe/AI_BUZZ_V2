@@ -1,0 +1,49 @@
+<partial_wiki>
+  <sections>
+    <section id="sec-scripts-1">
+      <title>Core Features</title>
+      <pages>
+        <page id="page-scripts-1">
+          <title>Perplexity Computation</title>
+          <description>This script calculates perplexity for a given model.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>scripts/perplexity_computation/calculate_perplexity.py</file_path>
+            <file_path>scripts/perplexity_computation/__init__.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-scripts-2</related>
+          </related_pages>
+        </page>
+        <page id="page-scripts-2">
+          <title>Replicate KV Heads</title>
+          <description>This script replicates KV heads for a given model.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>scripts/replicate_kv_head/replicate_kv_heads.py</file_path>
+            <file_path>scripts/replicate_kv_head/__init__.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-scripts-1</related>
+          </related_pages>
+        </page>
+        <page id="page-scripts-3">
+          <title>Finetune Model</title>
+          <description>This script fine-tunes a given model.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>scripts/finetune/run_ft_model.py</file_path>
+            <file_path>scripts/finetune/__init__.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-scripts-1</related>
+            <related>page-scripts-2</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-scripts-2</section_ref>
+      </subsections>
+    </section>
+  </sections>
+</partial_wiki>
