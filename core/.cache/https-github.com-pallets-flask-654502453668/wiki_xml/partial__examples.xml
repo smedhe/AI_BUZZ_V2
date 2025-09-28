@@ -1,0 +1,100 @@
+<partial_wiki>
+  <sections>
+    <section id="sec-examples-1">
+      <title>Overview</title>
+      <pages>
+        <page id="page-examples-1">
+          <title>Introduction to Flask Examples</title>
+          <description>This page provides an introduction to the examples provided in the Flask repository.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>examples/tutorial/README.rst</file_path>
+            <file_path>examples/javascript/README.rst</file_path>
+            <file_path>examples/celery/README.md</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-examples-2</related>
+          </related_pages>
+        </page>
+      </pages>
+    </section>
+    <section id="sec-examples-2">
+      <title>Examples and Notebooks</title>
+      <pages>
+        <page id="page-examples-2">
+          <title>Tutorial Example</title>
+          <description>This page describes the tutorial example provided in the Flask repository.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>examples/tutorial/flaskr/db.py</file_path>
+            <file_path>examples/tutorial/flaskr/blog.py</file_path>
+            <file_path>examples/tutorial/flaskr/auth.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-examples-3</related>
+          </related_pages>
+        </page>
+        <page id="page-examples-3">
+          <title>Celery Example</title>
+          <description>This page describes the Celery example provided in the Flask repository.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>examples/celery/src/task_app/views.py</file_path>
+            <file_path>examples/celery/src/task_app/tasks.py</file_path>
+            <file_path>examples/celery/make_celery.py</file_path>
+          </relevant_files>
+        </page>
+        <page id="page-examples-4">
+          <title>JavaScript Example</title>
+          <description>This page describes the JavaScript example provided in the Flask repository.</description>
+          <importance>low</importance>
+          <relevant_files>
+            <file_path>examples/javascript/js_example/views.py</file_path>
+            <file_path>examples/javascript/js_example/__init__.py</file_path>
+            <file_path>examples/javascript/js_example/templates/xhr.html</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+    <section id="sec-examples-3">
+      <title>Core Features</title>
+      <pages>
+        <page id="page-examples-5">
+          <title>Database Management</title>
+          <description>This page describes the database management features provided in the Flask examples.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>examples/tutorial/flaskr/db.py</file_path>
+            <file_path>examples/tutorial/flaskr/schema.sql</file_path>
+            <file_path>examples/celery/src/task_app/views.py</file_path>
+          </relevant_files>
+        </page>
+        <page id="page-examples-6">
+          <title>Authentication and Authorization</title>
+          <description>This page describes the authentication and authorization features provided in the Flask examples.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>examples/tutorial/flaskr/auth.py</file_path>
+            <file_path>examples/tutorial/flaskr/templates/auth/login.html</file_path>
+            <file_path>examples/tutorial/flaskr/templates/auth/register.html</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+    <section id="sec-examples-4">
+      <title>Backend Systems</title>
+      <pages>
+        <page id="page-examples-7">
+          <title>API Endpoints</title>
+          <description>This page describes the API endpoints provided in the Flask examples.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>examples/tutorial/flaskr/blog.py</file_path>
+            <file_path>examples/celery/src/task_app/views.py</file_path>
+            <file_path>examples/javascript/js_example/views.py</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+  </sections>
+</partial_wiki>

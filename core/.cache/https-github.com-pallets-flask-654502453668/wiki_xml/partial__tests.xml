@@ -1,0 +1,88 @@
+<partial_wiki>
+  <sections>
+    <section id="sec-tests-1">
+      <title>Core Features</title>
+      <pages>
+        <page id="page-tests-1">
+          <title>Testing Framework</title>
+          <description>This page describes the testing framework used in Flask, including the test_client and test_request_context functions.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>tests/test_basic.py</file_path>
+            <file_path>tests/test_testing.py</file_path>
+            <file_path>tests/conftest.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-tests-2</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-tests-2</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-tests-2">
+      <title>Backend Systems</title>
+      <pages>
+        <page id="page-tests-2">
+          <title>Request and Response Objects</title>
+          <description>This page describes the request and response objects used in Flask, including their attributes and methods.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>tests/test_reqctx.py</file_path>
+            <file_path>tests/test_appctx.py</file_path>
+            <file_path>tests/test_request.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-tests-1</related>
+          </related_pages>
+        </page>
+      </pages>
+    </section>
+    <section id="sec-tests-3">
+      <title>Examples and Notebooks</title>
+      <pages>
+        <page id="page-tests-3">
+          <title>Example Applications</title>
+          <description>This page describes the example applications included in the Flask repository, including the hello world app and the blueprint app.</description>
+          <importance>low</importance>
+          <relevant_files>
+            <file_path>tests/test_apps/helloworld/hello.py</file_path>
+            <file_path>tests/test_apps/blueprintapp/__init__.py</file_path>
+            <file_path>tests/test_apps/blueprintapp/apps/frontend/__init__.py</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+    <section id="sec-tests-4">
+      <title>Overview</title>
+      <pages>
+        <page id="page-tests-4">
+          <title>Introduction to Flask Testing</title>
+          <description>This page provides an introduction to testing in Flask, including the different types of tests and how to run them.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>tests/conftest.py</file_path>
+            <file_path>tests/test_basic.py</file_path>
+            <file_path>tests/test_testing.py</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+    <section id="sec-tests-5">
+      <title>Data Management/Flow</title>
+      <pages>
+        <page id="page-tests-5">
+          <title>Session Management</title>
+          <description>This page describes the session management system used in Flask, including how to use sessions and how to customize them.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>tests/test_session_interface.py</file_path>
+            <file_path>tests/test_reqctx.py</file_path>
+            <file_path>tests/test_appctx.py</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+  </sections>
+</partial_wiki>
