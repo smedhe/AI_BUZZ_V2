@@ -1,5 +1,3 @@
-# app.py
-
 import os
 import streamlit as st
 import tempfile
@@ -9,7 +7,7 @@ import io
 from build_wiki import build_sharded_wiki_from_github, get_unique_cache_dir
 from build_embeddings import build_units_for_repo, summarize_units_with_qgenie, units_to_dataframe, embed_texts, build_faiss_index, save_index, ensure_dir
 from generate_wiki_pages import generate_wiki_pages
-from hybrid_code_chatbot import HybridCodeChatbot
+from hybrid_code_chatbot import build_hybrid_code_chatbot_graph  # <-- Import your chatbot graph builder
 
 # ========== UI: Sidebar Inputs ==========
 st.set_page_config(page_title="Codebase Wiki & Chatbot", layout="wide")
@@ -80,16 +78,17 @@ def run_pipeline(github_url, github_token, language, model_name, regenerate):
     for f in page_files:
         with open(os.path.join(wiki_pages_dir, f), "r", encoding="utf-8") as fp:
             page_contents[f] = fp.read()
-    chatbot = HybridCodeChatbot(os.path.join(repo_dir, "embeddings"))
-    return page_files, page_contents, chatbot, repo_dir
+    # Build LangGraph chatbot
+    chatbot_graph = build_hybrid_code_chatbot_graph(os.path.join(repo_dir, "embeddings"), model_name=model_name)
+    return page_files, page_contents, chatbot_graph, repo_dir
 
 # ========== Session State ==========
 if "page_files" not in st.session_state:
     st.session_state.page_files = []
 if "page_contents" not in st.session_state:
     st.session_state.page_contents = {}
-if "chatbot" not in st.session_state:
-    st.session_state.chatbot = None
+if "chatbot_graph" not in st.session_state:
+    st.session_state.chatbot_graph = None
 if "repo_dir" not in st.session_state:
     st.session_state.repo_dir = None
 if "chat_history" not in st.session_state:
@@ -97,7 +96,7 @@ if "chat_history" not in st.session_state:
 
 # ========== Run Pipeline ==========
 if generate_btn:
-    st.session_state.page_files, st.session_state.page_contents, st.session_state.chatbot, st.session_state.repo_dir = run_pipeline(
+    st.session_state.page_files, st.session_state.page_contents, st.session_state.chatbot_graph, st.session_state.repo_dir = run_pipeline(
         github_url, github_token, language, model_name, regenerate
     )
     st.session_state.chat_history = []
@@ -132,28 +131,23 @@ if st.session_state.page_files:
         user_question = st.text_input("Ask your question here:", key="chat_input")
         if st.button("Ask", use_container_width=True):
             if user_question.strip():
-                # Hybrid retrieval
-                retrieval = st.session_state.chatbot.retrieve(user_question, topk_file=5, topk_symbol=5)
-                context = retrieval["context"]
-                # Call QGenie for answer
-                from qgenie import QGenieClient, ChatMessage
-                client = QGenieClient()
-                prompt = f"""You are a codebase assistant. Use the following context to answer the user's question.
-
-Context:
-{context}
-
-Question:
-{user_question}
-
-Return a concise, factual answer. If relevant, cite file paths or symbol names from the context."""
-                response = client.chat(messages=[ChatMessage(role="user", content=prompt)], model=model_name)
-                answer = getattr(response, "first_content", None) or str(response)
+                # Prepare state with history for multi-turn
+                state = {
+                    "question": user_question,
+                    "history": st.session_state.chat_history,
+                    "topk_file": 5,
+                    "topk_symbol": 5,
+                }
+                result = st.session_state.chatbot_graph.invoke(state)
+                answer = result["answer"]
+                references_files = [f["file_path"] for f in result.get("retrieved_files", [])]
+                references_symbols = [s["symbol_name"] for s in result.get("retrieved_symbols", [])]
                 # Save to chat history
                 st.session_state.chat_history.append({
                     "question": user_question,
                     "answer": answer,
-                    "references": retrieval["files"] + retrieval["symbols"],
+                    "references_files": references_files,
+                    "references_symbols": references_symbols,
                 })
         # Display chat history
         if st.session_state.chat_history:
@@ -161,10 +155,12 @@ Return a concise, factual answer. If relevant, cite file paths or symbol names f
             for idx, entry in enumerate(st.session_state.chat_history):
                 st.markdown(f"**Q{idx+1}:** {entry['question']}")
                 st.markdown(f"**A{idx+1}:** {entry['answer']}")
-                if entry["references"]:
+                if entry["references_files"] or entry["references_symbols"]:
                     st.markdown("**References:**")
-                    for ref in entry["references"]:
-                        st.markdown(f"- `{ref.get('file_path', '')}` {ref.get('symbol_type', '')} {ref.get('symbol_name', '')}")
+                    for ref in entry["references_files"]:
+                        st.markdown(f"- File: `{ref}`")
+                    for ref in entry["references_symbols"]:
+                        st.markdown(f"- Symbol: `{ref}`")
 
 else:
     st.info("Enter a GitHub URL and click **Generate Documentation** to begin.")

@@ -24,13 +24,12 @@
       <title>Core Features</title>
       <pages>
         <page id="page-shard1-2">
-          <title>Project Configuration</title>
-          <description>Configuration files for the project, including pyproject.toml and .editorconfig.</description>
+          <title>Project Structure</title>
+          <description>The project structure is defined in the pyproject.toml file.</description>
           <importance>medium</importance>
           <relevant_files>
             <file_path>pyproject.toml</file_path>
-            <file_path>.editorconfig</file_path>
-            <file_path>.pre-commit-config.yaml</file_path>
+            <file_path>.gitignore</file_path>
           </relevant_files>
           <related_pages>
             <related>page-shard1-1</related>
@@ -42,11 +41,12 @@
       <title>Deployment/Infrastructure</title>
       <pages>
         <page id="page-shard1-3">
-          <title>Git Ignore</title>
-          <description>Files to be ignored by Git, as specified in .gitignore.</description>
+          <title>Readthedocs Configuration</title>
+          <description>The Readthedocs configuration is defined in the .readthedocs.yaml file.</description>
           <importance>low</importance>
           <relevant_files>
-            <file_path>.gitignore</file_path>
+            <file_path>.readthedocs.yaml</file_path>
+            <file_path>.pre-commit-config.yaml</file_path>
           </relevant_files>
         </page>
       </pages>

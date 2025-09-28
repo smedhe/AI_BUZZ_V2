@@ -66,7 +66,7 @@
       <pages>
         <page id="page-docs-5">
           <title>Deploying Flask Applications</title>
-          <description>Flask applications can be deployed using various WSGI servers and deployment tools.</description>
+          <description>Flask applications can be deployed using various WSGI servers and web frameworks.</description>
           <importance>medium</importance>
           <relevant_files>
             <file_path>docs/deploying/index.rst</file_path>
@@ -80,8 +80,8 @@
       <title>Extensibility and Customization</title>
       <pages>
         <page id="page-docs-6">
-          <title>Extensions and Libraries</title>
-          <description>Flask has a wide range of extensions and libraries available to extend its functionality.</description>
+          <title>Flask Extensions</title>
+          <description>Flask extensions provide additional functionality to Flask applications.</description>
           <importance>low</importance>
           <relevant_files>
             <file_path>docs/extensions.rst</file_path>

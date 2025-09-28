@@ -28,7 +28,7 @@
           <relevant_files>
             <file_path>src/flask/wrappers.py</file_path>
             <file_path>src/flask/helpers.py</file_path>
-            <file_path>src/flask/ctx.py</file_path>
+            <file_path>src/flask/globals.py</file_path>
           </relevant_files>
           <related_pages>
             <related>page-src-3</related>
