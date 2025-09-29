@@ -1,0 +1,33 @@
+<partial_wiki>
+  <sections>
+    <section id="sec-notebooks-1">
+      <title>Examples and Notebooks</title>
+      <pages>
+        <page id="page-notebooks-1">
+          <title>QEfficientMPT Notebook</title>
+          <description>This page provides an overview of the QEfficientMPT notebook, which demonstrates the usage of efficient transformers for multi-part tasks.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>notebooks/QEfficientMPT.ipynb</file_path>
+            <file_path>notebooks/__init__.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-notebooks-2</related>
+          </related_pages>
+        </page>
+        <page id="page-notebooks-2">
+          <title>QEfficientGPT2 Notebook</title>
+          <description>This page provides an overview of the QEfficientGPT2 notebook, which demonstrates the usage of efficient transformers for GPT-2 tasks.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>notebooks/QEfficientGPT2.ipynb</file_path>
+            <file_path>notebooks/__init__.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-notebooks-1</related>
+          </related_pages>
+        </page>
+      </pages>
+    </section>
+  </sections>
+</partial_wiki>

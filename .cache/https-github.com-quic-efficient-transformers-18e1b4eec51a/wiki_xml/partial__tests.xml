@@ -1,0 +1,93 @@
+<partial_wiki>
+  <sections>
+    <section id="sec-tests-1">
+      <title>Overview</title>
+      <pages>
+        <page id="page-tests-1">
+          <title>Introduction to Tests</title>
+          <description>This page provides an overview of the tests available in the repository.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>tests/README.md</file_path>
+            <file_path>tests/__init__.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-tests-2</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-tests-2</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-tests-2">
+      <title>Core Features</title>
+      <pages>
+        <page id="page-tests-2">
+          <title>Transformer Models Testing</title>
+          <description>This page describes the testing of transformer models, including causal language models and speech sequence-to-sequence models.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>tests/transformers/models/test_causal_lm_models.py</file_path>
+            <file_path>tests/transformers/models/test_speech_seq2seq_models.py</file_path>
+            <file_path>tests/transformers/test_causal_lm.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-tests-3</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-tests-3</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-tests-3">
+      <title>Model Integration</title>
+      <pages>
+        <page id="page-tests-3">
+          <title>PEFT Model Testing</title>
+          <description>This page describes the testing of PEFT models, including Lora and adapter models.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>tests/peft/lora/test_lora_model.py</file_path>
+            <file_path>tests/peft/test_peft_model.py</file_path>
+            <file_path>tests/peft/test_peft_onnx_transforms.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-tests-4</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-tests-4</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-tests-4">
+      <title>Deployment/Infrastructure</title>
+      <pages>
+        <page id="page-tests-4">
+          <title>Cloud Testing</title>
+          <description>This page describes the testing of cloud-related functionality, including export, compile, and execute.</description>
+          <importance>low</importance>
+          <relevant_files>
+            <file_path>tests/cloud/test_export_compile_execute.py</file_path>
+            <file_path>tests/cloud/test_infer.py</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+    <section id="sec-tests-5">
+      <title>Examples and Notebooks</title>
+      <pages>
+        <page id="page-tests-5">
+          <title>Text Generation Example</title>
+          <description>This page provides an example of text generation using the transformer models.</description>
+          <importance>low</importance>
+          <relevant_files>
+            <file_path>tests/text_generation/test_text_generation.py</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+  </sections>
+</partial_wiki>

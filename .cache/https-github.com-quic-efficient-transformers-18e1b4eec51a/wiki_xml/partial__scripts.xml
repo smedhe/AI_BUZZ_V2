@@ -1,0 +1,77 @@
+<partial_wiki>
+  <sections>
+    <section id="sec-scripts-1">
+      <title>Overview</title>
+      <pages>
+        <page id="page-scripts-1">
+          <title>Introduction to Scripts</title>
+          <description>This page provides an overview of the scripts available in the repository.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>scripts/replicate_kv_head/README.md</file_path>
+            <file_path>scripts/perplexity_computation/README.md</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-scripts-2</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-scripts-2</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-scripts-2">
+      <title>Core Features</title>
+      <pages>
+        <page id="page-scripts-2">
+          <title>Perplexity Computation</title>
+          <description>This page describes the perplexity computation script and its usage.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>scripts/perplexity_computation/calculate_perplexity.py</file_path>
+            <file_path>scripts/perplexity_computation/__init__.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-scripts-3</related>
+          </related_pages>
+        </page>
+        <page id="page-scripts-3">
+          <title>Replicating KV Heads</title>
+          <description>This page explains the script for replicating KV heads and its application.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>scripts/replicate_kv_head/replicate_kv_heads.py</file_path>
+            <file_path>scripts/replicate_kv_head/__init__.py</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+    <section id="sec-scripts-3">
+      <title>Model Integration</title>
+      <pages>
+        <page id="page-scripts-4">
+          <title>Finetuning Models</title>
+          <description>This page discusses the finetuning script and its usage for model finetuning.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>scripts/finetune/run_ft_model.py</file_path>
+            <file_path>scripts/finetune/__init__.py</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+    <section id="sec-scripts-4">
+      <title>Deployment/Infrastructure</title>
+      <pages>
+        <page id="page-scripts-5">
+          <title>Jenkinsfile</title>
+          <description>This page explains the Jenkinsfile and its role in the deployment process.</description>
+          <importance>low</importance>
+          <relevant_files>
+            <file_path>scripts/Jenkinsfile</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+  </sections>
+</partial_wiki>

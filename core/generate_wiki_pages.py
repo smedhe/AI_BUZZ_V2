@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 import pickle
 
-# import utils  # Your shared utility module
+import utils  
 
 # ========================= XML Parsing =========================
 def load_wiki_xml(path: str) -> Dict[str, Any]:
@@ -272,10 +272,6 @@ Recommended types for '{section_title}': {mermaid_pref}
 Valid: sequenceDiagram, classDiagram, stateDiagram-v2, flowchart, erDiagram, graph LR, graph TD.
 Use fenced code blocks:
 100%
-
-
-
-
 
 Empty or Invalid Diagram
 

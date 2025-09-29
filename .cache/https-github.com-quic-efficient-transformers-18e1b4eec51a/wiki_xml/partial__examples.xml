@@ -1,0 +1,92 @@
+<partial_wiki>
+  <sections>
+    <section id="sec-examples-1">
+      <title>Examples and Notebooks</title>
+      <pages>
+        <page id="page-examples-1">
+          <title>Inference Examples</title>
+          <description>Example code for running inference with different models</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>examples/multiprojs_spd_inference.py</file_path>
+            <file_path>examples/draft_spd_inference.py</file_path>
+            <file_path>examples/pld_spd_inference.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-examples-2</related>
+          </related_pages>
+        </page>
+        <page id="page-examples-2">
+          <title>Model-Specific Examples</title>
+          <description>Examples for specific models, such as LLaMA and Gemma</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>examples/llama4_example.py</file_path>
+            <file_path>examples/gemma3_example/gemma3_mm.py</file_path>
+            <file_path>examples/intern_example/internvl_inference.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-examples-1</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-examples-2</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-examples-2">
+      <title>Core Features</title>
+      <pages>
+        <page id="page-examples-3">
+          <title>Speculative Decoding</title>
+          <description>Implementation of speculative decoding for efficient inference</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>examples/multiprojs_spd_inference.py</file_path>
+            <file_path>examples/draft_spd_inference.py</file_path>
+            <file_path>examples/pld_spd_inference.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-examples-1</related>
+          </related_pages>
+        </page>
+      </pages>
+    </section>
+    <section id="sec-examples-3">
+      <title>Model Integration</title>
+      <pages>
+        <page id="page-examples-4">
+          <title>Model Inference</title>
+          <description>Example code for running inference with different models</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>examples/peft_models.py</file_path>
+            <file_path>examples/lora_models.py</file_path>
+            <file_path>examples/basic_gguf_models.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-examples-2</related>
+          </related_pages>
+        </page>
+      </pages>
+    </section>
+    <section id="sec-examples-4">
+      <title>Overview</title>
+      <pages>
+        <page id="page-examples-5">
+          <title>Introduction to Efficient Transformers</title>
+          <description>Overview of the Efficient Transformers library</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>examples/speech_to_text/README.md</file_path>
+            <file_path>examples/intern_example/readme.md</file_path>
+            <file_path>examples/granite_example/readme.md</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-examples-1</related>
+          </related_pages>
+        </page>
+      </pages>
+    </section>
+  </sections>
+</partial_wiki>

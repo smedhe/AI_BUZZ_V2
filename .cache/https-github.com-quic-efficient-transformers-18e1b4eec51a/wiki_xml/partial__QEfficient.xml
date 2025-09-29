@@ -1,0 +1,98 @@
+<partial_wiki>
+  <sections>
+    <section id="sec-QEfficient-1">
+      <title>Overview</title>
+      <pages>
+        <page id="page-QEfficient-1">
+          <title>Introduction to QEfficient</title>
+          <description>QEfficient is a library for efficient transformers, providing support for various models and features.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>QEfficient/__init__.py</file_path>
+            <file_path>QEfficient/transformers/models/modeling_auto.py</file_path>
+            <file_path>QEfficient/base/modeling_qeff.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-QEfficient-2</related>
+          </related_pages>
+        </page>
+      </pages>
+      <subsections>
+        <section_ref>sec-QEfficient-2</section_ref>
+      </subsections>
+    </section>
+    <section id="sec-QEfficient-2">
+      <title>Core Features</title>
+      <pages>
+        <page id="page-QEfficient-2">
+          <title>Modeling Utilities</title>
+          <description>QEfficient provides various modeling utilities, including custom attention and rotary embedding implementations.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>QEfficient/transformers/modeling_utils.py</file_path>
+            <file_path>QEfficient/transformers/models/llama4/modeling_llama4.py</file_path>
+            <file_path>QEfficient/transformers/models/gemma3/modeling_gemma3.py</file_path>
+          </relevant_files>
+          <related_pages>
+            <related>page-QEfficient-3</related>
+          </related_pages>
+        </page>
+        <page id="page-QEfficient-3">
+          <title>Quantization and Compression</title>
+          <description>QEfficient supports various quantization and compression techniques, including FP8 and AWQ.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>QEfficient/transformers/quantizers/quantizer_compressed_tensors.py</file_path>
+            <file_path>QEfficient/transformers/quantizers/quantizer_gptq.py</file_path>
+            <file_path>QEfficient/transformers/quantizers/quantizer_awq.py</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+    <section id="sec-QEfficient-3">
+      <title>Model Integration</title>
+      <pages>
+        <page id="page-QEfficient-4">
+          <title>Model Implementations</title>
+          <description>QEfficient provides implementations for various transformer models, including LLaMA, Gemma, and Whisper.</description>
+          <importance>high</importance>
+          <relevant_files>
+            <file_path>QEfficient/transformers/models/llama/modeling_llama.py</file_path>
+            <file_path>QEfficient/transformers/models/gemma/modeling_gemma.py</file_path>
+            <file_path>QEfficient/transformers/models/whisper/modeling_whisper.py</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+    <section id="sec-QEfficient-4">
+      <title>Deployment/Infrastructure</title>
+      <pages>
+        <page id="page-QEfficient-5">
+          <title>Cloud Deployment</title>
+          <description>QEfficient provides tools for deploying models to the cloud, including export and inference scripts.</description>
+          <importance>medium</importance>
+          <relevant_files>
+            <file_path>QEfficient/exporter/export_hf_to_cloud_ai_100.py</file_path>
+            <file_path>QEfficient/cloud/infer.py</file_path>
+            <file_path>QEfficient/cloud/export.py</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+    <section id="sec-QEfficient-5">
+      <title>Examples and Notebooks</title>
+      <pages>
+        <page id="page-QEfficient-6">
+          <title>Finetuning Examples</title>
+          <description>QEfficient provides examples for finetuning models, including scripts and configuration files.</description>
+          <importance>low</importance>
+          <relevant_files>
+            <file_path>QEfficient/finetune/utils/helper.py</file_path>
+            <file_path>QEfficient/finetune/utils/config_utils.py</file_path>
+            <file_path>QEfficient/finetune/eval.py</file_path>
+          </relevant_files>
+        </page>
+      </pages>
+    </section>
+  </sections>
+</partial_wiki>

@@ -421,7 +421,204 @@ def hybrid_query(query: str, out_dir: str, topk: int = 5, mode: str = "summary")
     return hits[:topk]
 
 # ===================== Main Pipeline =====================
-
+ 
+def build_embeddings_for_repo(github_url: str, token: Optional[str] = None, output_root=None, MAX_FILES=None, force_summarize=False) -> str:
+    """
+    Build embeddings for a repository with intelligent caching.
+    Returns the output directory path.
+    """
+    # Build units
+    gid, meta, units = build_units_for_repo(github_url, token=token, output_root=output_root, MAX_FILES=MAX_FILES)
+    
+    if output_root is None:
+        out_dir = default_output_dir(github_url)
+    else:
+        out_dir = os.path.join(output_root, "embeddings")
+    ensure_dir(out_dir)
+ 
+    print(f"[INFO] Repo graph_id: {gid}; units: {len(units)}")
+ 
+    # Check if summaries already exist in cache
+    units_df_path = os.path.join(out_dir, "units.parquet")
+    needs_summarization = force_summarize
+    
+    if not needs_summarization and os.path.exists(units_df_path):
+        try:
+            cached_df = pd.read_parquet(units_df_path)
+            if "summary" in cached_df.columns and cached_df["summary"].notna().any():
+                print("[INFO] Found cached summaries, loading from cache...")
+                # Load summaries from cache back into units
+                summary_dict = dict(zip(cached_df["uid"], cached_df["summary"]))
+                summaries_loaded = 0
+                for unit in units:
+                    if unit.uid in summary_dict and summary_dict[unit.uid]:
+                        unit.summary = summary_dict[unit.uid]
+                        summaries_loaded += 1
+                
+                # Only skip summarization if we successfully loaded summaries for all units
+                if summaries_loaded > 0:
+                    print(f"[INFO] Loaded {summaries_loaded} summaries from cache")
+                    # Check if we have summaries for most units (allow some missing)
+                    if summaries_loaded >= len(units) * 0.8:  # At least 80% of units have summaries
+                        needs_summarization = False
+                        print("[INFO] Sufficient summaries loaded from cache, skipping summarization")
+                    else:
+                        print(f"[INFO] Only {summaries_loaded}/{len(units)} summaries found, will re-summarize")
+                        needs_summarization = True
+                else:
+                    print("[INFO] No valid summaries found in cache, will summarize")
+                    needs_summarization = True
+            else:
+                print("[INFO] No summary column found in cache, will summarize")
+                needs_summarization = True
+        except Exception as e:
+            print(f"[WARN] Failed to load cached summaries: {e}")
+            needs_summarization = True
+    else:
+        if force_summarize:
+            print("[INFO] Force summarization requested")
+        else:
+            print("[INFO] No cached units.parquet found, will summarize")
+        needs_summarization = True
+ 
+    # Summarize only if needed
+    if needs_summarization:
+        print("[INFO] Summarizing units with QGenie...")
+        summarize_units_with_qgenie(units)
+    else:
+        print("[INFO] Using cached summaries, skipping summarization")
+ 
+    # Pack dataframe
+    df = units_to_dataframe(units)
+    df_path = os.path.join(out_dir, "units.parquet")
+    save_parquet(df, df_path)
+ 
+    # Prepare embedding texts
+    file_mask = (df["level"] == "file")
+    sym_mask = (df["level"] == "symbol")
+ 
+    file_df = df[file_mask].copy()
+    sym_df = df[sym_mask].copy()
+ 
+    def prep_file_text(row):
+        base = row.get("code") or ""
+        return f"{row.get('file_path')}\n{base[:1500]}"
+ 
+    def prep_symbol_text(row):
+        parts = []
+        sig = row.get("signature") or row.get("symbol_name") or ""
+        if sig:
+            parts.append(sig)
+        parts.append(row.get("file_path") or "")
+        code = (row.get("code") or "")[:1500]
+        if code:
+            parts.append(code)
+        return "\n".join([p for p in parts if p])
+ 
+    file_code_texts = [prep_file_text(r) for _, r in file_df.iterrows()]
+    sym_code_texts = [prep_symbol_text(r) for _, r in sym_df.iterrows()]
+ 
+    file_summary_texts = file_df["summary"].fillna("").tolist()
+    sym_summary_texts = sym_df["summary"].fillna("").tolist()
+ 
+    # Check if embeddings already exist in cached dataframe
+    embeddings_exist = False
+    file_summary_vecs = None
+    sym_summary_vecs = None
+    
+    if os.path.exists(df_path):
+        try:
+            cached_df = pd.read_parquet(df_path)
+            if ("summary_embedding" in cached_df.columns and 
+                cached_df["summary_embedding"].notna().any() and
+                len(cached_df["summary_embedding"].iloc[0]) > 0):
+                print("[INFO] Found cached embeddings, loading from cache...")
+                # Load embeddings from cache
+                file_mask_cached = (cached_df["level"] == "file")
+                sym_mask_cached = (cached_df["level"] == "symbol")
+                file_df_cached = cached_df[file_mask_cached].copy()
+                sym_df_cached = cached_df[sym_mask_cached].copy()
+                
+                file_summary_vecs = np.array(file_df_cached["summary_embedding"].tolist())
+                sym_summary_vecs = np.array(sym_df_cached["summary_embedding"].tolist())
+                
+                # For code embeddings, we need to regenerate them since they're not cached
+                # But we can skip if FAISS indices exist
+                faiss_files_exist = all(os.path.exists(os.path.join(out_dir, f"{prefix}.index")) 
+                                      for prefix in ["file", "symbol", "file_summary", "symbol_summary"])
+                
+                if faiss_files_exist:
+                    print("[INFO] Found FAISS indices, loading cached embeddings...")
+                    embeddings_exist = True
+                else:
+                    print("[INFO] FAISS indices missing, regenerating code embeddings...")
+                    embeddings_exist = False
+        except Exception as e:
+            print(f"[WARN] Failed to load cached embeddings: {e}")
+            embeddings_exist = False
+ 
+    # Always generate code embeddings (they're not cached)
+    print("[INFO] Embedding file-level code texts...")
+    file_code_vecs = embed_texts(file_code_texts)
+    print("[INFO] Embedding symbol-level code texts...")
+    sym_code_vecs = embed_texts(sym_code_texts)
+ 
+    # Generate summary embeddings only if not cached
+    if not embeddings_exist or file_summary_vecs is None:
+        print("[INFO] Embedding file-level summaries...")
+        file_summary_vecs = embed_texts(file_summary_texts)
+        print("[INFO] Embedding symbol-level summaries...")
+        sym_summary_vecs = embed_texts(sym_summary_texts)
+    else:
+        print("[INFO] Using cached summary embeddings")
+ 
+    # Save summary embeddings in dataframe
+    file_df["summary_embedding"] = file_summary_vecs.tolist()
+    sym_df["summary_embedding"] = sym_summary_vecs.tolist()
+ 
+    # FAISS indices
+    print("[INFO] Building FAISS indices...")
+    file_index = build_faiss_index(file_code_vecs)
+    sym_index = build_faiss_index(sym_code_vecs)
+    file_summary_index = build_faiss_index(file_summary_vecs)
+    sym_summary_index = build_faiss_index(sym_summary_vecs)
+ 
+    # Save indices + ids
+    file_ids = file_df["uid"].tolist()
+    symbol_ids = sym_df["uid"].tolist()
+    save_index(file_index, file_ids, out_dir, "file")
+    save_index(sym_index, symbol_ids, out_dir, "symbol")
+    save_index(file_summary_index, file_ids, out_dir, "file_summary")
+    save_index(sym_summary_index, symbol_ids, out_dir, "symbol_summary")
+    
+    # Create combined indices for generate_wiki_pages.py compatibility
+    # Combined code index (file + symbol)
+    combined_code_index = build_faiss_index(np.vstack([file_code_vecs, sym_code_vecs]))
+    combined_code_ids = file_ids + symbol_ids
+    save_index(combined_code_index, combined_code_ids, out_dir, "code")
+    
+    # Combined summary index (file + symbol)
+    combined_summary_index = build_faiss_index(np.vstack([file_summary_vecs, sym_summary_vecs]))
+    combined_summary_ids = file_ids + symbol_ids
+    save_index(combined_summary_index, combined_summary_ids, out_dir, "summary")
+ 
+    # Save meta
+    meta_path = os.path.join(out_dir, "meta.json")
+    with open(meta_path, "w", encoding="utf-8") as f:
+        json.dump({"meta": meta, "units_path": df_path}, f, ensure_ascii=False, indent=2)
+ 
+    print(f"[OK] Saved to: {out_dir}")
+    print(f" - units: {df_path}")
+    print(f" - file.index / file_ids.json")
+    print(f" - symbol.index / symbol_ids.json")
+    print(f" - file_summary.index / file_ids.json")
+    print(f" - symbol_summary.index / symbol_ids.json")
+    print(f" - code.index / code_ids.json (combined)")
+    print(f" - summary.index / summary_ids.json (combined)")
+    print(f" - meta: {meta_path}")
+ 
+    return out_dir
+ 
 def build_units_for_repo(github_url: str, token: Optional[str], output_root=None, MAX_FILES=None) -> Tuple[str, Dict[str, Any], List[Unit]]:
     
     if output_root is None:
@@ -434,16 +631,16 @@ def build_units_for_repo(github_url: str, token: Optional[str], output_root=None
     branch = parts["branch"] or get_default_branch(owner, repo, token=token)
     subpath = parts["subpath"] or None
     gid = fingerprint(owner, repo, branch, subpath, github_url)
-
+ 
     # Download/unzip
     zip_bytes = download_repo_zip(owner, repo, branch)
     repo_root = unzip_to_temp(zip_bytes)
-
+ 
     # Extract units
     all_units: List[Unit] = []
     file_count = 0
     MAX_FILES = MAX_FILES  # <-- Set your limit here
-
+ 
     for abs_path, rel_path in iter_repo_files(repo_root, subpath=subpath, max_files=MAX_FILES):
         text = read_text_file(abs_path)
         if text is None:
@@ -451,23 +648,23 @@ def build_units_for_repo(github_url: str, token: Optional[str], output_root=None
         units = extract_units_for_file(rel_path, text)
         all_units.extend(units)
         file_count += 1
-
+ 
     meta = {
         "source_url": github_url,
         "owner": owner, "repo": repo, "branch": branch,
         "subpath": subpath or "", "created_at": now_iso(),
         "graph_id": gid, "totals": {"files_scanned": file_count, "units": len(all_units)}
     }
-
+ 
     # Cleanup tmp
     try:
         import shutil
         shutil.rmtree(os.path.dirname(repo_root))
     except Exception:
         pass
-
+ 
     return gid, meta, all_units
-
+ 
 def main():
     p = argparse.ArgumentParser(description="Build hybrid code embeddings (file + symbol) for a GitHub repository.")
     p.add_argument("--github-url", required=True, help="Repo URL: https://github.com/<owner>/<repo>[/tree/<branch>/<subpath>]")
@@ -477,96 +674,21 @@ def main():
     p.add_argument("--topk", type=int, default=5)
     p.add_argument("--query-mode", choices=["summary", "code"], default="summary", help="Query over summary or code embeddings")
     p.add_argument("--max-files", type=int, default=2, help="Maximum number of files to process for testing")
+    p.add_argument("--force-summarize", action="store_true", help="Force re-summarization even if summaries exist")
     args = p.parse_args()
-
-    # Build units
-    gid, meta, units = build_units_for_repo(args.github_url, token=args.token, MAX_FILES=args.max_files)
-    out_dir = default_output_dir(args.github_url)
-    ensure_dir(out_dir)
-
-    print(f"[INFO] Repo graph_id: {gid}; units: {len(units)}")
-
-    # Summarize (always)
-    print("[INFO] Summarizing units with QGenie...")
-    summarize_units_with_qgenie(units)
-
-    # Pack dataframe
-    df = units_to_dataframe(units)
+ 
+    # Use the optimized function
+    out_dir = build_embeddings_for_repo(
+        github_url=args.github_url,
+        token=args.token,
+        MAX_FILES=args.max_files,
+        force_summarize=args.force_summarize
+    )
+ 
+    # Load dataframe for querying
     df_path = os.path.join(out_dir, "units.parquet")
-    save_parquet(df, df_path)
-
-    # Prepare embedding texts
-    file_mask = (df["level"] == "file")
-    sym_mask = (df["level"] == "symbol")
-
-    file_df = df[file_mask].copy()
-    sym_df = df[sym_mask].copy()
-
-    def prep_file_text(row):
-        base = row.get("code") or ""
-        return f"{row.get('file_path')}\n{base[:1500]}"
-
-    def prep_symbol_text(row):
-        parts = []
-        sig = row.get("signature") or row.get("symbol_name") or ""
-        if sig:
-            parts.append(sig)
-        parts.append(row.get("file_path") or "")
-        code = (row.get("code") or "")[:1500]
-        if code:
-            parts.append(code)
-        return "\n".join([p for p in parts if p])
-
-    file_code_texts = [prep_file_text(r) for _, r in file_df.iterrows()]
-    sym_code_texts = [prep_symbol_text(r) for _, r in sym_df.iterrows()]
-
-    file_summary_texts = file_df["summary"].fillna("").tolist()
-    sym_summary_texts = sym_df["summary"].fillna("").tolist()
-
-    # Embeddings for code
-    print("[INFO] Embedding file-level code texts...")
-    file_code_vecs = embed_texts(file_code_texts,  device=args.device)
-    print("[INFO] Embedding symbol-level code texts...")
-    sym_code_vecs = embed_texts(sym_code_texts,  device=args.device)
-
-    # Embeddings for summaries
-    print("[INFO] Embedding file-level summaries...")
-    file_summary_vecs = embed_texts(file_summary_texts, device=args.device)
-    print("[INFO] Embedding symbol-level summaries...")
-    sym_summary_vecs = embed_texts(sym_summary_texts, device=args.device)
-
-    # Save summary embeddings in dataframe
-    file_df["summary_embedding"] = file_summary_vecs.tolist()
-    sym_df["summary_embedding"] = sym_summary_vecs.tolist()
-
-    # FAISS indices
-    print("[INFO] Building FAISS indices...")
-    file_index = build_faiss_index(file_code_vecs)
-    sym_index = build_faiss_index(sym_code_vecs)
-    file_summary_index = build_faiss_index(file_summary_vecs)
-    sym_summary_index = build_faiss_index(sym_summary_vecs)
-
-    # Save indices + ids
-    file_ids = file_df["uid"].tolist()
-    symbol_ids = sym_df["uid"].tolist()
-    save_index(file_index, file_ids, out_dir, "file")
-    save_index(sym_index, symbol_ids, out_dir, "symbol")
-    save_index(file_summary_index, file_ids, out_dir, "file_summary")
-    save_index(sym_summary_index, symbol_ids, out_dir, "symbol_summary")
-
-    # Save meta
-    meta_path = os.path.join(out_dir, "meta.json")
-    with open(meta_path, "w", encoding="utf-8") as f:
-        json.dump({"meta": meta, "units_path": df_path}, f, ensure_ascii=False, indent=2)
-
-    print(f"[OK] Saved to: {out_dir}")
-    print(f" - units: {df_path}")
-    print(f" - file.index / file_ids.json")
-    print(f" - symbol.index / symbol_ids.json")
-    print(f" - file_summary.index / file_ids.json")
-    print(f" - symbol_summary.index / symbol_ids.json")
-    print(f" - meta: {meta_path}")
-
+    df = pd.read_parquet(df_path)
+ 
     # Optional query
     if args.query:
         print(f"\n[QUERY] {args.query} (mode={args.query_mode})")
@@ -581,6 +703,6 @@ def main():
             else:
                 code = row.get("code") or ""
                 print("  code:", (code[:220] + "...") if len(code) > 220 else code)
-
+ 
 if __name__ == "__main__":
     main()
