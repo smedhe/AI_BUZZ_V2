@@ -926,3 +926,4 @@ else:
             st.info(" Enter a GitHub URL and click **Generate Documentation** to begin.")
     else:
         st.info(" Enter a GitHub URL and click **Generate Documentation** to begin.")
+

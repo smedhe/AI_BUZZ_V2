@@ -117,9 +117,10 @@ def embed_query(texts: List[str]) -> np.ndarray:
 
 def section_normalize(title: str) -> str:
     t = (title or "").strip().lower()
-    t = re.sub(r"[\s-_]+", " ", t)
-    t = t.replace("&", "and")
+    t = re.sub(r"[\s_-]+", " ", t)
+    t = t.replace("&amp;", "and")
     return t
+
 
 # ========================= Hybrid Query =========================
 SECTION_HINTS = {

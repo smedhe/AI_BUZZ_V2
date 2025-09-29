@@ -53,8 +53,8 @@
           <relevant_files>
             <file_path>examples/javascript/js_example/__init__.py</file_path>
             <file_path>examples/javascript/js_example/views.py</file_path>
-            <file_path>examples/javascript/tests/test_js_example.py</file_path>
             <file_path>examples/javascript/js_example/templates/base.html</file_path>
+            <file_path>examples/javascript/tests/test_js_example.py</file_path>
           </relevant_files>
         </page>
       </pages>

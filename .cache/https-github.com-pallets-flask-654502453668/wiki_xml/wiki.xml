@@ -103,7 +103,7 @@
     </page>
     <page id="page-4">
       <title>Testing Framework</title>
-      <description>This page describes the testing framework used in Flask, including the test_client and test_request_context functions.</description>
+      <description>This page describes the testing framework used in Flask, including the test client and test helpers.</description>
       <importance>high</importance>
       <relevant_files>
         <file_path>tests/conftest.py</file_path>
@@ -120,9 +120,9 @@
       <description>This page describes the request and response objects used in Flask, including their attributes and methods.</description>
       <importance>medium</importance>
       <relevant_files>
-        <file_path>tests/test_appctx.py</file_path>
         <file_path>tests/test_reqctx.py</file_path>
         <file_path>tests/test_request.py</file_path>
+        <file_path>tests/test_views.py</file_path>
       </relevant_files>
       <related_pages>
         <related>page-4</related>
@@ -131,11 +131,11 @@
     </page>
     <page id="page-6">
       <title>Example Applications</title>
-      <description>This page provides examples of simple Flask applications, including a "Hello, World!" app and a more complex app with multiple routes.</description>
+      <description>This page describes the example applications included in the Flask repository, including the hello world app and the blueprint app.</description>
       <importance>low</importance>
       <relevant_files>
         <file_path>tests/test_apps/blueprintapp/__init__.py</file_path>
-        <file_path>tests/test_apps/cliapp/app.py</file_path>
+        <file_path>tests/test_apps/blueprintapp/apps/frontend/__init__.py</file_path>
         <file_path>tests/test_apps/helloworld/hello.py</file_path>
       </relevant_files>
       <related_pages />
@@ -155,7 +155,7 @@
     </page>
     <page id="page-8">
       <title>Session Management</title>
-      <description>This page describes how to manage sessions in Flask, including how to use the session object and how to implement custom session interfaces.</description>
+      <description>This page describes the session management system used in Flask, including how to use sessions and how to customize them.</description>
       <importance>medium</importance>
       <relevant_files>
         <file_path>tests/test_appctx.py</file_path>
@@ -167,7 +167,7 @@
     </page>
     <page id="page-9">
       <title>Running Flask Applications</title>
-      <description>This page describes how to run Flask applications, including how to use the built-in development server and how to deploy to production environments.</description>
+      <description>This page describes how to run Flask applications, including how to use the built-in development server and how to deploy to production.</description>
       <importance>low</importance>
       <relevant_files>
         <file_path>tests/test_apps/blueprintapp/__init__.py</file_path>
@@ -323,7 +323,7 @@
       <importance>high</importance>
       <relevant_files>
         <file_path>docs/tutorial/index.rst</file_path>
-        <file_path>docs/tutorial/install.rst</file_path>
+        <file_path>docs/tutorial/templates.rst</file_path>
         <file_path>docs/tutorial/views.rst</file_path>
       </relevant_files>
       <related_pages />

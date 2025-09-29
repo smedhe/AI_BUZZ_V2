@@ -39,12 +39,12 @@
         </page>
         <page id="page-QEfficient-3">
           <title>Quantization and Compression</title>
-          <description>QEfficient supports various quantization and compression techniques, including FP8 and AWQ.</description>
+          <description>QEfficient supports various quantization and compression techniques, including FP8 and compressed tensors.</description>
           <importance>medium</importance>
           <relevant_files>
             <file_path>QEfficient/transformers/quantizers/quantizer_compressed_tensors.py</file_path>
-            <file_path>QEfficient/transformers/quantizers/quantizer_gptq.py</file_path>
-            <file_path>QEfficient/transformers/quantizers/quantizer_awq.py</file_path>
+            <file_path>QEfficient/transformers/quantizers/quantizer_utils.py</file_path>
+            <file_path>QEfficient/transformers/quantizers/quant_transforms.py</file_path>
           </relevant_files>
         </page>
       </pages>

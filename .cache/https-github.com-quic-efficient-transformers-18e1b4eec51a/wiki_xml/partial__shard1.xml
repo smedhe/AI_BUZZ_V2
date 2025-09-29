@@ -24,8 +24,8 @@
       <title>Deployment/Infrastructure</title>
       <pages>
         <page id="page-shard1-2">
-          <title>Docker Containerization</title>
-          <description>This page explains how to use the Dockerfile to containerize the Efficient Transformers library.</description>
+          <title>Docker Deployment</title>
+          <description>This page explains how to deploy the Efficient Transformers library using Docker.</description>
           <importance>medium</importance>
           <relevant_files>
             <file_path>Dockerfile</file_path>
@@ -45,15 +45,12 @@
       <pages>
         <page id="page-shard1-3">
           <title>Library Configuration</title>
-          <description>This page describes the configuration options available in the Efficient Transformers library, including the pyproject.toml file.</description>
-          <importance>medium</importance>
+          <description>This page describes the configuration options available in the Efficient Transformers library.</description>
+          <importance>low</importance>
           <relevant_files>
             <file_path>pyproject.toml</file_path>
             <file_path>MANIFEST.in</file_path>
           </relevant_files>
-          <related_pages>
-            <related>page-shard1-1</related>
-          </related_pages>
         </page>
       </pages>
     </section>

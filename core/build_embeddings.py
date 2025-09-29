@@ -639,7 +639,7 @@ def build_units_for_repo(github_url: str, token: Optional[str], output_root=None
     # Extract units
     all_units: List[Unit] = []
     file_count = 0
-    MAX_FILES = MAX_FILES  # <-- Set your limit here
+    MAX_FILES = MAX_FILES  
  
     for abs_path, rel_path in iter_repo_files(repo_root, subpath=subpath, max_files=MAX_FILES):
         text = read_text_file(abs_path)

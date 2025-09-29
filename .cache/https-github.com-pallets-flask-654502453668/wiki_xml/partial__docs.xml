@@ -70,8 +70,8 @@
           <importance>high</importance>
           <relevant_files>
             <file_path>docs/tutorial/index.rst</file_path>
-            <file_path>docs/tutorial/install.rst</file_path>
             <file_path>docs/tutorial/views.rst</file_path>
+            <file_path>docs/tutorial/templates.rst</file_path>
           </relevant_files>
         </page>
       </pages>

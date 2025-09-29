@@ -8,6 +8,7 @@
           <description>This page provides an overview of the scripts available in the repository.</description>
           <importance>high</importance>
           <relevant_files>
+            <file_path>scripts/__init__.py</file_path>
             <file_path>scripts/replicate_kv_head/README.md</file_path>
             <file_path>scripts/perplexity_computation/README.md</file_path>
           </relevant_files>

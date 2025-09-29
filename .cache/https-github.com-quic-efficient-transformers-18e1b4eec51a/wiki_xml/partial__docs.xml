@@ -31,20 +31,20 @@
           <relevant_files>
             <file_path>docs/source/python_api.md</file_path>
             <file_path>docs/source/reference.md</file_path>
-            <file_path>docs/source/finetune.md</file_path>
+            <file_path>docs/conf.py</file_path>
           </relevant_files>
           <related_pages>
             <related>page-docs-3</related>
           </related_pages>
         </page>
         <page id="page-docs-3">
-          <title>CLI API Reference</title>
-          <description>A reference guide to the CLI API of the Efficient Transformers library.</description>
+          <title>Finetuning Models</title>
+          <description>A guide to finetuning models using the Efficient Transformers library.</description>
           <importance>medium</importance>
           <relevant_files>
+            <file_path>docs/source/finetune.md</file_path>
             <file_path>docs/source/cli_api.md</file_path>
-            <file_path>docs/source/quick_start.md</file_path>
-            <file_path>docs/source/installation.md</file_path>
+            <file_path>docs/requirements.txt</file_path>
           </relevant_files>
         </page>
       </pages>
@@ -53,13 +53,13 @@
       <title>Examples and Notebooks</title>
       <pages>
         <page id="page-docs-4">
-          <title>Getting Started with Efficient Transformers</title>
-          <description>A step-by-step guide to getting started with the Efficient Transformers library.</description>
-          <importance>high</importance>
+          <title>Quick Start Example</title>
+          <description>A quick start example to get started with the Efficient Transformers library.</description>
+          <importance>low</importance>
           <relevant_files>
             <file_path>docs/source/quick_start.md</file_path>
-            <file_path>docs/source/installation.md</file_path>
-            <file_path>docs/README.md</file_path>
+            <file_path>docs/index.md</file_path>
+            <file_path>docs/image/Cloud_AI_100.png</file_path>
           </relevant_files>
         </page>
       </pages>
@@ -68,13 +68,13 @@
       <title>Model Integration</title>
       <pages>
         <page id="page-docs-5">
-          <title>Model Fine-Tuning</title>
-          <description>A guide to fine-tuning models using the Efficient Transformers library.</description>
+          <title>Model Reference</title>
+          <description>A reference guide to the models supported by the Efficient Transformers library.</description>
           <importance>medium</importance>
           <relevant_files>
-            <file_path>docs/source/finetune.md</file_path>
-            <file_path>docs/source/python_api.md</file_path>
             <file_path>docs/source/reference.md</file_path>
+            <file_path>docs/source/validate.md</file_path>
+            <file_path>docs/source/upgrade.md</file_path>
           </relevant_files>
         </page>
       </pages>
@@ -83,13 +83,13 @@
       <title>Deployment/Infrastructure</title>
       <pages>
         <page id="page-docs-6">
-          <title>Requirements and Dependencies</title>
-          <description>A list of requirements and dependencies for the Efficient Transformers library.</description>
-          <importance>low</importance>
+          <title>Installation Guide</title>
+          <description>A guide to installing the Efficient Transformers library.</description>
+          <importance>high</importance>
           <relevant_files>
-            <file_path>docs/requirements.txt</file_path>
             <file_path>docs/source/installation.md</file_path>
-            <file_path>docs/source/quick_start.md</file_path>
+            <file_path>docs/requirements.txt</file_path>
+            <file_path>docs/conf.py</file_path>
           </relevant_files>
         </page>
       </pages>

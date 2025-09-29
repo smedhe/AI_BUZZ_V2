@@ -68,39 +68,30 @@
       <relevant_files>
         <file_path>README.md</file_path>
         <file_path>pyproject.toml</file_path>
-        <file_path>docs/source/introduction.md</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-4</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-1</parent_section>
     </page>
     <page id="page-2">
-      <title>Docker Containerization</title>
-      <description>Containerizing the Efficient Transformers library using Docker</description>
+      <title>Docker Deployment</title>
+      <description>Deploying the Efficient Transformers library using Docker</description>
       <importance>medium</importance>
       <relevant_files>
         <file_path>Dockerfile</file_path>
         <file_path>.gitignore</file_path>
-        <file_path>scripts/replicate_kv_head/README.md</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-7</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-2</parent_section>
     </page>
     <page id="page-3">
       <title>Library Configuration</title>
       <description>Configuring the Efficient Transformers library</description>
-      <importance>medium</importance>
+      <importance>low</importance>
       <relevant_files>
-        <file_path>pyproject.toml</file_path>
         <file_path>MANIFEST.in</file_path>
-        <file_path>QEfficient/transformers/models/modeling_auto.py</file_path>
+        <file_path>pyproject.toml</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-1</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-3</parent_section>
     </page>
     <page id="page-4">
@@ -110,11 +101,8 @@
       <relevant_files>
         <file_path>tests/README.md</file_path>
         <file_path>tests/__init__.py</file_path>
-        <file_path>tests/transformers/models/test_causal_lm_models.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-1</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-1</parent_section>
     </page>
     <page id="page-5">
@@ -124,11 +112,8 @@
       <relevant_files>
         <file_path>tests/transformers/models/test_causal_lm_models.py</file_path>
         <file_path>tests/transformers/models/test_speech_seq2seq_models.py</file_path>
-        <file_path>tests/transformers/test_causal_lm.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-3</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-3</parent_section>
     </page>
     <page id="page-6">
@@ -138,11 +123,8 @@
       <relevant_files>
         <file_path>tests/peft/lora/test_lora_model.py</file_path>
         <file_path>tests/peft/test_peft_model.py</file_path>
-        <file_path>tests/peft/test_peft_onnx_transforms.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-12</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-4</parent_section>
     </page>
     <page id="page-7">
@@ -152,11 +134,8 @@
       <relevant_files>
         <file_path>tests/cloud/test_export_compile_execute.py</file_path>
         <file_path>tests/cloud/test_infer.py</file_path>
-        <file_path>QEfficient/cloud/export.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-2</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-2</parent_section>
     </page>
     <page id="page-8">
@@ -165,12 +144,8 @@
       <importance>low</importance>
       <relevant_files>
         <file_path>tests/text_generation/test_text_generation.py</file_path>
-        <file_path>examples/gemma3_example/gemma3_mm.py</file_path>
-        <file_path>examples/intern_example/internvl_inference.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-15</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-5</parent_section>
     </page>
     <page id="page-9">
@@ -180,11 +155,8 @@
       <relevant_files>
         <file_path>QEfficient/__init__.py</file_path>
         <file_path>QEfficient/base/modeling_qeff.py</file_path>
-        <file_path>QEfficient/transformers/models/modeling_auto.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-1</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-1</parent_section>
     </page>
     <page id="page-10">
@@ -194,11 +166,8 @@
       <relevant_files>
         <file_path>QEfficient/transformers/modeling_utils.py</file_path>
         <file_path>QEfficient/transformers/models/gemma3/modeling_gemma3.py</file_path>
-        <file_path>QEfficient/transformers/models/llama4/modeling_llama4.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-9</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-3</parent_section>
     </page>
     <page id="page-11">
@@ -206,13 +175,10 @@
       <description>Quantization and compression techniques supported by QEfficient</description>
       <importance>medium</importance>
       <relevant_files>
-        <file_path>QEfficient/transformers/quantizers/quantizer_awq.py</file_path>
+        <file_path>QEfficient/transformers/quantizers/quant_transforms.py</file_path>
         <file_path>QEfficient/transformers/quantizers/quantizer_compressed_tensors.py</file_path>
-        <file_path>QEfficient/transformers/quantizers/quantizer_gptq.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-10</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-3</parent_section>
     </page>
     <page id="page-12">
@@ -222,11 +188,8 @@
       <relevant_files>
         <file_path>QEfficient/transformers/models/gemma/modeling_gemma.py</file_path>
         <file_path>QEfficient/transformers/models/llama/modeling_llama.py</file_path>
-        <file_path>QEfficient/transformers/models/whisper/modeling_whisper.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-6</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-4</parent_section>
     </page>
     <page id="page-13">
@@ -236,11 +199,8 @@
       <relevant_files>
         <file_path>QEfficient/cloud/export.py</file_path>
         <file_path>QEfficient/cloud/infer.py</file_path>
-        <file_path>QEfficient/exporter/export_hf_to_cloud_ai_100.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-7</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-2</parent_section>
     </page>
     <page id="page-14">
@@ -250,11 +210,8 @@
       <relevant_files>
         <file_path>QEfficient/finetune/eval.py</file_path>
         <file_path>QEfficient/finetune/utils/config_utils.py</file_path>
-        <file_path>QEfficient/finetune/utils/helper.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-15</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-5</parent_section>
     </page>
     <page id="page-15">
@@ -264,12 +221,8 @@
       <relevant_files>
         <file_path>examples/draft_spd_inference.py</file_path>
         <file_path>examples/multiprojs_spd_inference.py</file_path>
-        <file_path>examples/pld_spd_inference.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-8</related>
-        <related>page-14</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-5</parent_section>
     </page>
     <page id="page-16">
@@ -279,11 +232,8 @@
       <relevant_files>
         <file_path>examples/gemma3_example/gemma3_mm.py</file_path>
         <file_path>examples/intern_example/internvl_inference.py</file_path>
-        <file_path>examples/llama4_example.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-15</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-5</parent_section>
     </page>
     <page id="page-17">
@@ -293,11 +243,8 @@
       <relevant_files>
         <file_path>examples/draft_spd_inference.py</file_path>
         <file_path>examples/multiprojs_spd_inference.py</file_path>
-        <file_path>examples/pld_spd_inference.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-15</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-3</parent_section>
     </page>
     <page id="page-18">
@@ -307,11 +254,8 @@
       <relevant_files>
         <file_path>examples/basic_gguf_models.py</file_path>
         <file_path>examples/lora_models.py</file_path>
-        <file_path>examples/peft_models.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-16</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-4</parent_section>
     </page>
     <page id="page-19">
@@ -321,11 +265,8 @@
       <relevant_files>
         <file_path>examples/granite_example/readme.md</file_path>
         <file_path>examples/intern_example/readme.md</file_path>
-        <file_path>examples/speech_to_text/README.md</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-15</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-1</parent_section>
     </page>
     <page id="page-20">
@@ -335,11 +276,8 @@
       <relevant_files>
         <file_path>notebooks/QEfficientMPT.ipynb</file_path>
         <file_path>notebooks/__init__.py</file_path>
-        <file_path>docs/source/quick_start.md</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-21</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-5</parent_section>
     </page>
     <page id="page-21">
@@ -349,25 +287,19 @@
       <relevant_files>
         <file_path>notebooks/QEfficientGPT2.ipynb</file_path>
         <file_path>notebooks/__init__.py</file_path>
-        <file_path>docs/source/installation.md</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-20</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-5</parent_section>
     </page>
     <page id="page-22">
       <title>Introduction to Efficient Transformers</title>
-      <description>An introduction to the Efficient Transformers library</description>
+      <description>Introduction to the Efficient Transformers library</description>
       <importance>high</importance>
       <relevant_files>
         <file_path>docs/README.md</file_path>
         <file_path>docs/source/introduction.md</file_path>
-        <file_path>docs/source/quick_start.md</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-1</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-1</parent_section>
     </page>
     <page id="page-23">
@@ -375,69 +307,54 @@
       <description>Reference guide to the Python API of the Efficient Transformers library</description>
       <importance>medium</importance>
       <relevant_files>
-        <file_path>docs/source/finetune.md</file_path>
+        <file_path>docs/conf.py</file_path>
         <file_path>docs/source/python_api.md</file_path>
-        <file_path>docs/source/reference.md</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-3</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-3</parent_section>
     </page>
     <page id="page-24">
-      <title>CLI API Reference</title>
-      <description>Reference guide to the CLI API of the Efficient Transformers library</description>
+      <title>Finetuning Models</title>
+      <description>Guide to finetuning models using the Efficient Transformers library</description>
       <importance>medium</importance>
       <relevant_files>
+        <file_path>docs/requirements.txt</file_path>
         <file_path>docs/source/cli_api.md</file_path>
-        <file_path>docs/source/installation.md</file_path>
-        <file_path>docs/source/quick_start.md</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-23</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-3</parent_section>
     </page>
     <page id="page-25">
-      <title>Getting Started with Efficient Transformers</title>
-      <description>Step-by-step guide to getting started with the Efficient Transformers library</description>
-      <importance>high</importance>
+      <title>Quick Start Example</title>
+      <description>Quick start example to get started with the Efficient Transformers library</description>
+      <importance>low</importance>
       <relevant_files>
-        <file_path>docs/README.md</file_path>
-        <file_path>docs/source/installation.md</file_path>
-        <file_path>docs/source/quick_start.md</file_path>
+        <file_path>docs/image/Cloud_AI_100.png</file_path>
+        <file_path>docs/index.md</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-1</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-5</parent_section>
     </page>
     <page id="page-26">
-      <title>Model Fine-Tuning</title>
-      <description>Guide to fine-tuning models using the Efficient Transformers library</description>
+      <title>Model Reference</title>
+      <description>Reference guide to the models supported by the Efficient Transformers library</description>
       <importance>medium</importance>
       <relevant_files>
-        <file_path>docs/source/finetune.md</file_path>
-        <file_path>docs/source/python_api.md</file_path>
         <file_path>docs/source/reference.md</file_path>
+        <file_path>docs/source/upgrade.md</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-12</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-4</parent_section>
     </page>
     <page id="page-27">
-      <title>Requirements and Dependencies</title>
-      <description>List of requirements and dependencies for the Efficient Transformers library</description>
-      <importance>low</importance>
+      <title>Installation Guide</title>
+      <description>Guide to installing the Efficient Transformers library</description>
+      <importance>high</importance>
       <relevant_files>
+        <file_path>docs/conf.py</file_path>
         <file_path>docs/requirements.txt</file_path>
-        <file_path>docs/source/installation.md</file_path>
-        <file_path>docs/source/quick_start.md</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-2</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-2</parent_section>
     </page>
     <page id="page-28">
@@ -445,69 +362,53 @@
       <description>Overview of the scripts available in the repository</description>
       <importance>high</importance>
       <relevant_files>
+        <file_path>scripts/__init__.py</file_path>
         <file_path>scripts/perplexity_computation/README.md</file_path>
-        <file_path>scripts/replicate_kv_head/README.md</file_path>
-        <file_path>scripts/finetune/__init__.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-1</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-1</parent_section>
     </page>
     <page id="page-29">
       <title>Perplexity Computation</title>
-      <description>Script for computing perplexity</description>
+      <description>Perplexity computation script and its usage</description>
       <importance>medium</importance>
       <relevant_files>
         <file_path>scripts/perplexity_computation/__init__.py</file_path>
         <file_path>scripts/perplexity_computation/calculate_perplexity.py</file_path>
-        <file_path>scripts/replicate_kv_head/replicate_kv_heads.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-28</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-3</parent_section>
     </page>
     <page id="page-30">
       <title>Replicating KV Heads</title>
-      <description>Script for replicating KV heads</description>
+      <description>Script for replicating KV heads and its application</description>
       <importance>medium</importance>
       <relevant_files>
         <file_path>scripts/replicate_kv_head/__init__.py</file_path>
         <file_path>scripts/replicate_kv_head/replicate_kv_heads.py</file_path>
-        <file_path>scripts/perplexity_computation/calculate_perplexity.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-29</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-3</parent_section>
     </page>
     <page id="page-31">
       <title>Finetuning Models</title>
-      <description>Script for finetuning models</description>
+      <description>Finetuning script and its usage for model finetuning</description>
       <importance>high</importance>
       <relevant_files>
         <file_path>scripts/finetune/__init__.py</file_path>
         <file_path>scripts/finetune/run_ft_model.py</file_path>
-        <file_path>QEfficient/finetune/eval.py</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-26</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-4</parent_section>
     </page>
     <page id="page-32">
       <title>Jenkinsfile</title>
-      <description>Jenkinsfile for deployment</description>
+      <description>Jenkinsfile and its role in the deployment process</description>
       <importance>low</importance>
       <relevant_files>
         <file_path>scripts/Jenkinsfile</file_path>
-        <file_path>docs/source/installation.md</file_path>
-        <file_path>docs/source/quick_start.md</file_path>
       </relevant_files>
-      <related_pages>
-        <related>page-2</related>
-      </related_pages>
+      <related_pages />
       <parent_section>section-2</parent_section>
     </page>
   </pages>
