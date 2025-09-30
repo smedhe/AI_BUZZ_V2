@@ -238,7 +238,19 @@ def build_context_pack(file_hits: pd.DataFrame, sym_hits: pd.DataFrame, max_unit
             })
     return json.dumps(rows, ensure_ascii=False, indent=2)
 
-def build_page_prompt(repo_id: str, section_title: str, page_spec: Dict[str, Any], file_hits: pd.DataFrame, sym_hits: pd.DataFrame, lang_text: str, readme_ok: bool, min_files_per_page: int = 2, max_files_per_page: int = 5, max_units: int = 16, max_code_chars: int = 1200) -> Tuple[str, str]:
+def build_page_prompt(
+    repo_id: str,
+    section_title: str,
+    page_spec: Dict[str, Any],
+    file_hits: pd.DataFrame,
+    sym_hits: pd.DataFrame,
+    lang_text: str,
+    readme_ok: bool,
+    min_files_per_page: int = 2,
+    max_files_per_page: int = 5,
+    max_units: int = 16,
+    max_code_chars: int = 1200
+) -> Tuple[str, str]:
     sec_norm = section_normalize(section_title)
     mermaid_pref = SECTION_TO_MERMAID.get(sec_norm, ["flowchart"])
     context_block = build_context_pack(file_hits, sym_hits, max_units=max_units, max_code_chars=max_code_chars)
@@ -248,7 +260,9 @@ def build_page_prompt(repo_id: str, section_title: str, page_spec: Dict[str, Any
 
     avoid_readme = "EXCEPT in 'Overview' or 'Examples and Notebooks'." if not readme_ok else "Allowed for this page."
 
+   
     draft = f"""You are a senior technical writer and software architect documenting the repository '{repo_id}'.
+
 PAGE SPEC:
 
 Section: {section_title}
@@ -256,42 +270,55 @@ Page ID: {page_spec.get('id')}
 Title: {page_spec.get('title')}
 Description: {page_spec.get('description')}
 Importance: {page_spec.get('importance')}
+
 ALLOWED vs FORBIDDEN SECTION TITLES (context; do not create new sections):
 
 Allowed: {ALLOWED_SECTIONS}
 Forbidden: {FORBIDDEN_SECTIONS}
+
 FILE GROUNDEDNESS (HARD RULES):
 
 Use ONLY file paths from the context units below; do NOT invent paths.
 Include {min_files_per_page}–{max_files_per_page} exact file paths (verbatim) in a "References" section.
 README-like files (README, README.md/.rst/.txt) are {avoid_readme}
 Prefer code/config files that truly support the page topic.
+
 MERMAID DIAGRAMS:
 
 Include at least one Mermaid diagram suitable for this section.
 Recommended types for '{section_title}': {mermaid_pref}
 Valid: sequenceDiagram, classDiagram, stateDiagram-v2, flowchart, erDiagram, graph LR, graph TD.
-Use fenced code blocks:
-100%
-
-Empty or Invalid Diagram
-
+Use fenced code blocks.
 Add a short caption below each diagram.
+
+## CRITICAL: Depth and Richness Requirements
+- Write a comprehensive, detailed, and in-depth documentation page.
+- Cover not just what the code does, but also why, how, and in what context it is used.
+- Include explanations of architecture, design decisions, workflows, and interactions.
+- Provide usage examples, edge cases, and best practices.
+- Add diagrams, tables, and lists where helpful.
+- For each referenced file or symbol, explain its role and how it fits into the bigger picture.
+- Do NOT summarize briefly; aim for a thorough, multi-section document that could serve as a standalone reference for a new engineer.
+- The documentation should be at least 800 words unless the topic is extremely narrow.
+
 OUTPUT FORMAT (STRICT):
 
 Return ONLY Markdown. No front-matter, no commentary.
 Suggested headings:
-{page_spec.get('title')}
-Overview
-Key Components / Concepts
-How it Works
-Example(s)
-Diagram(s)
-References (with exact file paths)
-Be concise yet complete; avoid generic filler.
+# {page_spec.get('title')}
+## Overview
+## Key Components / Concepts
+## How it Works
+## Example(s)
+## Diagram(s)
+## References (with exact file paths)
+
+Be thorough, detailed, and educational. Avoid generic filler. Make this page as useful as possible for onboarding and deep understanding.
+
 CONTEXT UNITS (use these only; do not invent file paths): {context_block}
 
-XML 'relevant_files' hints (optional): {xml_files_hint_text} """
+XML 'relevant_files' hints (optional): {xml_files_hint_text}
+"""
 
     refine = f"""You are a meticulous documentation editor.
 Refine the Markdown for page '{page_spec.get('title')}' under '{section_title}' for repo '{repo_id}'.
@@ -304,9 +331,16 @@ Mermaid diagram(s) exist and use suitable type(s) for this section (e.g., {merma
 Headings present: # Title, ## Overview, ## Key Components / Concepts, ## How it Works, ## Example(s), ## Diagram(s), ## References.
 No generic filler; precise explanations aligned with the code/summaries.
 Language: {lang_text}. No extra commentary.
-Return ONLY the final Markdown (no extra text). ORIGINAL DRAFT: """
-    return draft, refine
 
+## CRITICAL: Depth and Richness Requirements
+- Ensure the documentation is comprehensive, detailed, and in-depth.
+- Add further explanations, examples, and clarifications where needed.
+- Expand on any brief sections.
+- The documentation should be at least 800 words unless the topic is extremely narrow.
+
+Return ONLY the final Markdown (no extra text). ORIGINAL DRAFT:
+"""
+    return draft, refine
 # ========================= QGenie =========================
 def qgenie_chat(prompt: str, system: Optional[str] = None) -> str:
     from qgenie import QGenieClient, ChatMessage

@@ -771,6 +771,8 @@ def build_prompt_shard_guarded(
     """
     Builds a strict shard prompt for documentation generation.
     """
+    import textwrap
+
     files = shard_summary["files"]
     file_paths = [f["path"] for f in files]
 
@@ -809,6 +811,19 @@ def build_prompt_shard_guarded(
         ## What you are building (THIS SHARD ONLY)
         Return a coherent <partial_wiki> for this shard. Do NOT describe other shards or the whole repo.
 
+        ## REQUIRED SECTIONS (must always be present, in this order)
+        1. **Overview**: Summarize what the repository does, its main purpose, and high-level functionality.
+        2. **Installation and Setup**: Provide instructions and context for installing, configuring, and running the repository.
+        3. **Core Architecture**: Describe the main architectural components, design patterns, and how the system is organized.
+
+        ## DYNAMIC SECTION GENERATION
+        - After the required sections, analyze the repository files, context, and knowledge graph.
+        - Propose additional sections and pages that are most relevant for this repository.
+        - The section titles and pages should reflect the actual content and structure of the repo.
+        - Example: For a machine learning repo (e.g., Transformers), you might include sections/pages like "Modeling Classes", "Export & Inference", "Fine-Tuning", "Testing".
+        - Example: For a deployment/web repo, you might include "Frontend Implementation", "Backend Implementation", "Deployment", "CI/CD Pipeline", etc.
+        - Use your judgment to surface the most important and useful topics for users of this repo.
+
         ## ALLOWED vs FORBIDDEN section titles
         - Allowed (use ONLY these; case-insensitive match): {allowed_sections_norm}
         - Forbidden (must NOT appear): {forbidden_sections_norm}
@@ -818,19 +833,9 @@ def build_prompt_shard_guarded(
         - For EACH page you propose:
           - Include **2–5** <file_path> entries under <relevant_files>.
           - **Prefer code or config files** that directly support the page topic.
-          - **Avoid README-like files** (`README`, `README.md`, `README.rst`, `README.txt`) **EXCEPT** for pages under **"Overview"** or **"Examples and Notebooks"**.
+          - **Avoid README-like files** (`README`, `README.md`, `README.rst`, `README.txt`) **EXCEPT** for pages under **"Overview"** or **"Installation and Setup"**.
           - If you cannot find suitable files for a page, **do NOT create that page**.
         - NEVER invent file names or directories. Use exact, case-correct paths from the list.
-
-        ## Section-wise guidance (DO follow)
-        - "System Architecture": architecture/design docs, diagrams, high-level organization; prefer architecture/design docs or top-level module entry points.
-        - "Core Features": source files implementing major capabilities (models, pipelines, core APIs).
-        - "Data Management/Flow": data loaders, ETL/pipelines, DB/SQL/migrations, repository classes.
-        - "Backend Systems": server/api/controllers/services/routes middleware.
-        - "Model Integration": modeling_*.py, inference/training scripts, weight loading, checkpoints.
-        - "Deployment/Infrastructure": Dockerfile, docker-compose, helm/k8s manifests, Terraform, Ansible, CI workflows.
-        - "Examples and Notebooks": files under examples/, notebooks/.ipynb.
-        - "Overview": README (root/docs), entry docs that introduce the project.
 
         ## Page quality bar
         - Write concise, specific titles and descriptions.
@@ -875,8 +880,16 @@ def build_prompt_shard_guarded(
         - Output ONLY <partial_wiki>. No extra text, no markdown, no commentary.
         - Use IDs starting with: sec-{shard_name}-N, page-{shard_name}-N (N = 1..).
         - Use section titles ONLY from the allowed list, never from the forbidden list.
-        - For non-"Overview"/"Examples and Notebooks" pages, DO NOT include README-like files in <relevant_files>.
+        - For non-"Overview"/"Installation and Setup" pages, DO NOT include README-like files in <relevant_files>.
         - Do NOT create a page if you cannot pick 2–5 valid file paths for it from the list.
+
+        ## DEDUPLICATION POLICY (CRITICAL)
+        - Each section title MUST appear only once in this shard.
+        - Each page title MUST be unique within this shard (case-insensitive).
+        - If multiple pages or sections have the same or similar title, merge their content or keep only the most relevant one.
+        - Remove any duplicate or redundant sections or pages.
+        - Only use canonical allowed section titles. Do NOT create variations (e.g., 'Overview' and 'Project Overview').
+        - If two sections/pages cover similar content, merge them into one and remove the duplicate.
     """).strip()
 
     return prompt
@@ -895,6 +908,8 @@ def build_final_refine_prompt(
       - enforce file selection policy,
       - produce ONLY <wiki_structure>.
     """
+    import textwrap
+
     readme_block = ""
     if readme_excerpt:
         readme_block = textwrap.dedent(f"""
@@ -945,12 +960,18 @@ def build_final_refine_prompt(
 
         {readme_block}
 
-        ## Your task
-        - Keep the most logical and informative sections. Identify which section is more important and would make the best documentation for a repository.
-        - Identify the most important files to include in the documentation.
-        - Refine and normalize the merged XML into a single, clean <wiki_structure>.
-        - Keep topical pages; remove redundant/empty ones.
-        - Enforce the policies below.
+        ## REQUIRED SECTIONS (must always be present, in this order)
+        1. **Overview**: Summarize what the repository does, its main purpose, and high-level functionality.
+        2. **Installation and Setup**: Provide instructions and context for installing, configuring, and running the repository.
+        3. **Core Architecture**: Describe the main architectural components, design patterns, and how the system is organized.
+
+        ## DYNAMIC SECTION GENERATION
+        - After the required sections, analyze the repository files, context, and knowledge graph.
+        - Propose additional sections and pages that are most relevant for this repository.
+        - The section titles and pages should reflect the actual content and structure of the repo.
+        - Example: For a machine learning repo (e.g., Transformers), you might include sections/pages like "Modeling Classes", "Export & Inference", "Fine-Tuning", "Testing".
+        - Example: For a deployment/web repo, you might include "Frontend Implementation", "Backend Implementation", "Deployment", "CI/CD Pipeline", etc.
+        - Use your judgment to surface the most important and useful topics for users of this repo.
 
         ## Policies to enforce
         1) **IDs and references**
@@ -958,16 +979,19 @@ def build_final_refine_prompt(
            - Each <page> MUST have exactly one <parent_section> that exists.
            - All <section_ref> and <page_ref> MUST reference existing IDs.
 
-        2) **Section titles**
-           - Use a sensible, standard set such as:
-             ["Overview","System Architecture","Core Features","Data Management/Flow","Backend Systems","Model Integration","Deployment/Infrastructure","Examples and Notebooks","Extensibility and Customization"]
-           - Do NOT invent noisy/generic sections (e.g., "Text Examples", "Random Scripts", "Misc").
+        2) **Section and Page Titles (DEDUPLICATION POLICY)**
+           - Each section title MUST appear only once in the final wiki (case-insensitive).
+           - Each page title MUST be unique within the final wiki (case-insensitive).
+           - If multiple sections or pages have the same or similar title, merge their content or keep only the most relevant one.
+           - Remove any duplicate or redundant sections or pages.
+           - Only use canonical allowed section titles. Do NOT create variations (e.g., 'Overview' and 'Project Overview').
+           - If two sections/pages cover similar content, merge them into one and remove the duplicate.
 
         3) **File selection**
            - Each page MUST include **2–5** <file_path> entries in <relevant_files>.
            - Prefer code or config files relevant to the page topic.
-           - **Avoid README-like files** (README, README.md/.rst/.txt) **EXCEPT** for pages under "Overview" or "Examples and Notebooks".
-           - Remove any page that cannot justify at least 1 non-README file (unless under "Overview" or "Examples and Notebooks").
+           - **Avoid README-like files** (README, README.md/.rst/.txt) **EXCEPT** for pages under "Overview" or "Installation and Setup".
+           - Remove any page that cannot justify at least 1 non-README file (unless under "Overview" or "Installation and Setup").
 
         4) **Language**
            - All human-readable fields (title, description) must be in {lang_text}.
@@ -991,7 +1015,7 @@ def qgenie_generate(prompt: str, model: str = None) -> str:
         raise RuntimeError("qgenie is not installed. Run: pip install qgenie")
     client = QGenieClient(timeout=100)
     chat_response = client.chat(
-        messages=[ChatMessage(role="user", content=prompt)], model="Pro", 
+        messages=[ChatMessage(role="user", content=prompt)], model=model, 
     )
     result = getattr(chat_response, "first_content", None)
     if not result:
@@ -1111,6 +1135,62 @@ def compose_final_wiki(owner_repo: str, description: str, merged_root: Any) -> s
             dst_pages.append(p)
     return ET.tostring(ws, encoding="unicode")
 
+def clean_final_wiki_duplicates(xml_text: str) -> str:
+    """
+    Removes duplicate pages (by title, case-insensitive) and merges their relevant_files.
+    Also ensures each section title is unique.
+    """
+    import xml.etree.ElementTree as ET
+
+    try:
+        root = ET.fromstring(xml_text)
+    except Exception:
+        return xml_text
+
+    # Deduplicate sections by title
+    sections_el = root.find("sections")
+    seen_section_titles = set()
+    kept_sections = []
+    for s in list(sections_el.findall("section")):
+        title = (s.findtext("title") or "").strip().lower()
+        if title not in seen_section_titles:
+            seen_section_titles.add(title)
+            kept_sections.append(s)
+    for s in list(sections_el):
+        sections_el.remove(s)
+    for s in kept_sections:
+        sections_el.append(s)
+
+    # Deduplicate pages by title
+    pages_el = root.find("pages")
+    seen_page_titles = {}
+    kept_pages = []
+    for p in list(pages_el.findall("page")):
+        title = (p.findtext("title") or "").strip().lower()
+        if title in seen_page_titles:
+            # Merge relevant_files
+            prev_p = seen_page_titles[title]
+            rf_prev = prev_p.find("relevant_files")
+            rf_curr = p.find("relevant_files")
+            files_prev = set(fp.text for fp in rf_prev.findall("file_path") if fp.text)
+            files_curr = set(fp.text for fp in rf_curr.findall("file_path") if fp.text)
+            all_files = files_prev | files_curr
+            # Clear and re-add
+            for fp in list(rf_prev):
+                rf_prev.remove(fp)
+            for fp in sorted(all_files):
+                ET.SubElement(rf_prev, "file_path").text = fp
+            # Optionally: merge descriptions, importance, etc.
+        else:
+            seen_page_titles[title] = p
+            kept_pages.append(p)
+    for p in list(pages_el):
+        pages_el.remove(p)
+    for p in kept_pages:
+        pages_el.append(p)
+
+    return ET.tostring(root, encoding="unicode")
+
 # ===================== Output Path Functions =====================
 def get_unique_cache_dir(gh_url: str) -> str:
     # Unique name based on sanitized URL and hash
@@ -1140,8 +1220,8 @@ def build_sharded_wiki_from_github(
     max_files: int = 0,
     lang_text: str = "English",
     qgenie_model: str = "Pro",
-    max_files_per_shard: int = 200,
-    readme_max_chars: int = 4000,
+    max_files_per_shard: int = 300,
+    readme_max_chars: int = 8000,
     output_root: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
@@ -1285,6 +1365,9 @@ def build_sharded_wiki_from_github(
     final_xml = qgenie_generate(refine_prompt)
     final_xml = validate_or_wrap_xml(final_xml, "wiki_structure")
 
+    # === DEDUPLICATE PAGES AND SECTIONS ===
+    final_xml = clean_final_wiki_duplicates(final_xml)
+
     # Save final wiki XML
     final_path = wiki_default_output_path(cache_dir)
     ensure_dir(os.path.dirname(final_path))
@@ -1303,28 +1386,27 @@ def build_sharded_wiki_from_github(
         "knowledge_graph_dir": kg_dir,
         "wiki_xml_dir": wiki_dir,
     }
-
 # ===================== Example Usage =====================
-if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser(description="Build sharded wiki from GitHub repo")
-    parser.add_argument("--gh_url", help="GitHub repo URL")
-    parser.add_argument("--token", help="GitHub token", default=None)
-    parser.add_argument("--max_files", type=int, default=0)
-    parser.add_argument("--lang", default="English")
-    parser.add_argument("--model", default="Pro")
-    parser.add_argument("--max_files_per_shard", type=int, default=200)
-    parser.add_argument("--readme_max_chars", type=int, default=4000)
-    args = parser.parse_args()
+# if __name__ == "__main__":
+#     import argparse
+#     parser = argparse.ArgumentParser(description="Build sharded wiki from GitHub repo")
+#     parser.add_argument("--gh_url", help="GitHub repo URL")
+#     parser.add_argument("--token", help="GitHub token", default=None)
+#     parser.add_argument("--max_files", type=int, default=0)
+#     parser.add_argument("--lang", default="English")
+#     parser.add_argument("--model", default="Pro")
+#     parser.add_argument("--max_files_per_shard", type=int, default=200)
+#     parser.add_argument("--readme_max_chars", type=int, default=4000)
+#     args = parser.parse_args()
 
-    result = build_sharded_wiki_from_github(
-        gh_url=args.gh_url,
-        token=args.token,
-        max_files=args.max_files,
-        lang_text=args.lang,
-        qgenie_model=args.model,
-        max_files_per_shard=args.max_files_per_shard,
-        readme_max_chars=args.readme_max_chars,
-    )
-    print("Final wiki XML saved at:", result["final_wiki_path"])
-    print(result["final_wiki_xml"])
+#     result = build_sharded_wiki_from_github(
+#         gh_url=args.gh_url,
+#         token=args.token,
+#         max_files=args.max_files,
+#         lang_text=args.lang,
+#         qgenie_model=args.model,
+#         max_files_per_shard=args.max_files_per_shard,
+#         readme_max_chars=args.readme_max_chars,
+#     )
+#     print("Final wiki XML saved at:", result["final_wiki_path"])
+#     print(result["final_wiki_xml"])

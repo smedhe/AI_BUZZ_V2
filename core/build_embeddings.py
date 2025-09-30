@@ -11,6 +11,7 @@ import zipfile
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
+from tqdm import tqdm
 
 import numpy as np
 import pandas as pd
@@ -306,10 +307,10 @@ def extract_units_for_file(path: str, text: str) -> List[Unit]:
 
 # ===================== Summarization (QGenie, always) =====================
 
-def summarize_units_with_qgenie(units: List[Unit]):
+def summarize_units_with_qgenie(units: List[Unit], model_name):
     from qgenie import QGenieClient, ChatMessage
     client = QGenieClient(timeout=100)
-    for u in units:
+    for u in tqdm(units, desc="Summarizing units with QGenie"):
         snippet = u.code or ""
         if not snippet.strip():
             u.summary = ""
@@ -332,7 +333,7 @@ Code (excerpt):
 {snippet[:4000]}
 """
         try:
-            resp = client.chat(messages=[ChatMessage(role="user", content=prompt)],)
+            resp = client.chat(messages=[ChatMessage(role="user", content=prompt)],model=model_name)
             u.summary = getattr(resp, "first_content", None) or str(resp)
         except Exception as e:
             print(f"[WARN] QGenie summarization failed for {u.uid}: {e}", file=sys.stderr)
@@ -422,7 +423,7 @@ def hybrid_query(query: str, out_dir: str, topk: int = 5, mode: str = "summary")
 
 # ===================== Main Pipeline =====================
  
-def build_embeddings_for_repo(github_url: str, token: Optional[str] = None, output_root=None, MAX_FILES=None, force_summarize=False) -> str:
+def build_embeddings_for_repo(github_url: str, token: Optional[str] = None, output_root=None, MAX_FILES=None, force_summarize=False, model_name=None) -> str:
     """
     Build embeddings for a repository with intelligent caching.
     Returns the output directory path.
@@ -484,7 +485,7 @@ def build_embeddings_for_repo(github_url: str, token: Optional[str] = None, outp
     # Summarize only if needed
     if needs_summarization:
         print("[INFO] Summarizing units with QGenie...")
-        summarize_units_with_qgenie(units)
+        summarize_units_with_qgenie(units, model_name=model_name)
     else:
         print("[INFO] Using cached summaries, skipping summarization")
  
@@ -682,7 +683,8 @@ def main():
         github_url=args.github_url,
         token=args.token,
         MAX_FILES=args.max_files,
-        force_summarize=args.force_summarize
+        force_summarize=args.force_summarize,
+        model_name="Pro"
     )
  
     # Load dataframe for querying
@@ -704,5 +706,5 @@ def main():
                 code = row.get("code") or ""
                 print("  code:", (code[:220] + "...") if len(code) > 220 else code)
  
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
