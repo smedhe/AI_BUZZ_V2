@@ -196,33 +196,26 @@ from hybrid_code_chatbot import build_hybrid_code_chatbot_graph
 # ========== UI: Sidebar Inputs ==========
 st.set_page_config(page_title="Codebase Wiki & Chatbot", layout="wide")
 st.title("DocuGenie: Codebase Documentation & Q&A Chatbot")
- 
+
 with st.sidebar:
     # Only show setup form if no documentation is loaded
     if not st.session_state.get('page_files'):
         st.header("Repository & Generation Settings")
-        
-        # Show a small indicator when setup form is active
         if st.session_state.get('manual_reset', False):
             st.success("Ready for new documentation setup")
         github_url = st.text_input("GitHub URL", value="https://github.com/pallets/flask")
         github_token = st.text_input("GitHub Token (optional)", type="password")
         language = st.selectbox("Documentation Language", ["English", "Chinese", "Spanish", "French"], index=0)
         model_name = st.selectbox("QGenie Model", ["Pro", "Turbo"], index=0)
-        
-        # Performance options
         st.subheader("Performance Options")
         max_files = st.slider("Max Files to Process", min_value=10, max_value=200, value=50, 
                              help="Fewer files = faster processing. More files = more comprehensive docs.")
         use_cache = st.checkbox("Use Caching (Recommended)", value=True, 
                                help="Cache embeddings to speed up subsequent runs")
         regenerate = st.checkbox("Regenerate Documentation (ignore cache)", value=False)
-        
         generate_btn = st.button("Generate Documentation", type="primary", use_container_width=True)
     else:
-        # Documentation is loaded, show clean interface
         generate_btn = False
-        # Use stored values from session state
         github_url = st.session_state.get('github_url', '')
         github_token = ''
         language = 'English'
@@ -230,20 +223,20 @@ with st.sidebar:
         max_files = 50
         use_cache = True
         regenerate = False
+
+        # --- Chatbot Button (only if not in chat view) ---
+        if not st.session_state.get('show_half_and_half', False):
+            if st.button("💬 Open Chatbot", key="open_chatbot_btn", use_container_width=True, type="primary"):
+                st.session_state.show_half_and_half = True
+                st.rerun()
+
         
-        # Add option to start fresh
-        st.markdown("---")
         if st.button("Generate New Documentation", use_container_width=True, type="secondary"):
-            # Clear all session state to show setup form again
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
-            
-            # Set a flag to prevent auto-loading after manual reset
             st.session_state.manual_reset = True
-            
-            # Force rerun to show the setup form
             st.rerun()
- 
+
 # ========== Helper Functions ==========
 def create_github_url(github_url, file_path, line_number=None):
     """
@@ -618,15 +611,16 @@ if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 if "github_url" not in st.session_state:
     st.session_state.github_url = None
-
+if "show_half_and_half" not in st.session_state:
+    st.session_state.show_half_and_half = False
 # ========== Run Pipeline ==========
 if generate_btn:
     st.session_state.page_files, st.session_state.page_contents, st.session_state.chatbot_graph, st.session_state.repo_dir = run_pipeline(
         github_url, github_token, language, model_name, regenerate, max_files, use_cache
     )
-    st.session_state.github_url = github_url  # Store GitHub URL for reference links
+    st.session_state.github_url = github_url
     st.session_state.chat_history = []
-    # Clear the manual reset flag since we're generating new documentation
+    st.session_state.show_half_and_half = False
     st.session_state.manual_reset = False
  
 # ========== Auto-load Cached Documentation ==========
@@ -693,33 +687,20 @@ if not st.session_state.get('page_files') and github_url and github_url.strip() 
             st.error(f"Error details: {traceback.format_exc()}")
  
 # ========== Sidebar Navigation ==========
-# Initialize page_titles to empty dict to prevent KeyError
 page_titles = {}
- 
+
 if st.session_state.get('page_files'):
-    # Extract page titles
     page_titles = get_page_titles(st.session_state.page_files, st.session_state.page_contents)
-    
-    # Page navigation in sidebar
     with st.sidebar:
-        st.header(" Documentation Pages")
-        
-        # Initialize selected page in session state if not exists
+        st.header("Documentation Pages")
         if "selected_page" not in st.session_state:
             st.session_state.selected_page = st.session_state.get('page_files', [None])[0]
-        
-        # Page selection as clickable list
         st.markdown("**Select a page:**")
-        
-        # Create a container for the page list
         page_list_container = st.container()
-        
         with page_list_container:
             page_files = st.session_state.get('page_files', [])
             for i, filename in enumerate(page_files):
                 title = page_titles[filename]
-                
-                # Create a button for each page
                 if st.button(
                     title, 
                     key=f"page_btn_{i}",
@@ -728,10 +709,7 @@ if st.session_state.get('page_files'):
                 ):
                     st.session_state.selected_page = filename
                     st.rerun()
-        
         selected_page = st.session_state.get('selected_page')
-        
-        # Download button in sidebar
         if st.button(" Download All Documentation", use_container_width=True):
             buf = io.BytesIO()
             with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
@@ -745,38 +723,32 @@ if st.session_state.get('page_files'):
                 mime="application/zip",
                 use_container_width=True,
             )
- 
+
 # ========== Main Content Area ==========
 if st.session_state.get('page_files'):
-    # Check if user has asked a question (for half-and-half layout)
-    if st.session_state.get('chat_history'):
-        # Half-and-half layout when chat is active
+    selected_page = st.session_state.get('selected_page')
+    page_title = page_titles.get(selected_page, selected_page) if selected_page else "Documentation"
+
+    # HALF-AND-HALF VIEW
+    if st.session_state.get('show_half_and_half', False):
         col1, col2 = st.columns([1, 1], gap="large")
-        
         with col1:
-            # Documentation content (left half) with separate scrolling
-            page_title = page_titles.get(selected_page, selected_page) if selected_page else "Documentation"
             st.header(f" {page_title}")
-            
-            # Create a container with fixed height for scrolling
             doc_container = st.container()
             with doc_container:
                 if selected_page and st.session_state.page_contents:
                     render_markdown_with_mermaid(st.session_state.page_contents[selected_page], selected_page)
                 else:
                     st.info("No documentation content available.")
-        
+
         with col2:
-            # Chat interface (right half) with separate scrolling
-            st.header(" Q&A Chatbot")
-            
-            # Chat input section (fixed at top)
+            st.header("Q&A Chatbot")
             chat_input_container = st.container()
             with chat_input_container:
                 user_question = st.text_input("Ask your question here:", key="chat_input")
-                if st.button("Ask", use_container_width=True):
+                ask_clicked = st.button("Ask", use_container_width=True)
+                if ask_clicked:
                     if user_question.strip():
-                        # Prepare state with history for multi-turn
                         state = {
                             "question": user_question,
                             "history": st.session_state.get('chat_history', []),
@@ -787,7 +759,6 @@ if st.session_state.get('page_files'):
                         answer = result["answer"]
                         references_files = [f["file_path"] for f in result.get("retrieved_files", [])]
                         references_symbols = [s["symbol_name"] for s in result.get("retrieved_symbols", [])]
-                        # Save to chat history with full retrieved data for better links
                         st.session_state.chat_history.append({
                             "question": user_question,
                             "answer": answer,
@@ -797,22 +768,35 @@ if st.session_state.get('page_files'):
                             "retrieved_symbols": result.get("retrieved_symbols", []),
                         })
                         st.rerun()
-            
-            # Chat history section with scrolling
+
+                # Show the latest answer immediately after Ask button
+                if st.session_state.get('chat_history'):
+                    latest_entry = st.session_state.chat_history[-1]
+                    st.markdown(f"**Question:** {latest_entry['question']}")
+                    st.markdown(f"**Answer:** {latest_entry['answer']}")
+                    current_github_url = st.session_state.github_url or github_url
+                    display_references_with_links(
+                        latest_entry["references_files"], 
+                        latest_entry["references_symbols"], 
+                        current_github_url,
+                        latest_entry.get("retrieved_files"),
+                        latest_entry.get("retrieved_symbols")
+                    )
+            # --- Close Chat Button ---
+            if st.button("❌ Close Chat", key="close_chat_btn", type="secondary"):
+                st.session_state.show_half_and_half = False
+                st.rerun()
+            # Chat history section (optional, below everything)
             if st.session_state.get('chat_history'):
                 st.markdown("---")
                 st.subheader(" Chat History")
-                
-                # Create a scrollable container for chat history
                 chat_container = st.container()
                 with chat_container:
                     chat_history = st.session_state.get('chat_history', [])
                     for idx, entry in enumerate(chat_history):
-                        with st.expander(f"Q{idx+1}: {entry['question'][:50]}..." if len(entry['question']) > 50 else f"Q{idx+1}: {entry['question']}", expanded=(idx == len(chat_history) - 1)):
+                        with st.expander(f"Q{idx+1}: {entry['question'][:50]}..." if len(entry['question']) > 50 else f"Q{idx+1}: {entry['question']}", expanded=False):
                             st.markdown(f"**Question:** {entry['question']}")
                             st.markdown(f"**Answer:** {entry['answer']}")
-                            # Display references with clickable GitHub links
-                            # Use session state GitHub URL or fallback to current sidebar input
                             current_github_url = st.session_state.github_url or github_url
                             display_references_with_links(
                                 entry["references_files"], 
@@ -822,108 +806,25 @@ if st.session_state.get('page_files'):
                                 entry.get("retrieved_symbols")
                             )
 
+    # FULL-WIDTH DOCUMENTATION VIEW
     else:
-            # Default layout (full width documentation + sticky chat input at bottom)
-            # Add padding to account for sticky chat
-            st.markdown('<div class="main-content-with-sticky-chat">', unsafe_allow_html=True)
-            
-            page_title = page_titles.get(selected_page, selected_page) if selected_page else "Documentation"
-            st.header(f"{page_title}")
-            
-            # Documentation content
-            st.markdown("---")
-            if selected_page and st.session_state.page_contents:
-                render_markdown_with_mermaid(st.session_state.page_contents[selected_page], selected_page)
-            else:
-                st.info("No documentation content available.")
-            
-            # Close the padding div
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-            # Floating chat button that's always visible
-            st.markdown("---")
-            
-            # Initialize chat modal state
-            if "show_chat_modal" not in st.session_state:
-                st.session_state.show_chat_modal = False
-            
-            # Use st.components.v1.html for proper JavaScript execution
-            import streamlit.components.v1 as components
-            
-            fab_html = """
-            <div id="floating-chat-fab" style="
-                position: fixed !important;
-                bottom: 20px !important;
-                right: 20px !important;
-                z-index: 999999 !important;
-                width: 60px !important;
-                height: 60px !important;
-                border-radius: 50% !important;
-                background-color: #ff6b6b !important;
-                color: white !important;
-                border: none !important;
-                font-size: 24px !important;
-                cursor: pointer !important;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                transition: all 0.3s ease !important;
-            " onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.4)'" 
-            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.3)'"
-            onclick="alert('Chat functionality coming soon! Use the chat input at the bottom of the page.')">
-                
-            </div>
-            """
-            
-            components.html(fab_html, height=0)
-            
-            # Regular chat input at bottom (fallback)
-            st.markdown("### Ask a Question")
-            
-            col1, col2, col3 = st.columns([1, 2, 1])
-            with col2:
-                user_question = st.text_input("Ask your question about the codebase:", key="chat_input", placeholder="Type your question here...")
-                if st.button("Ask Question", use_container_width=True, type="primary"):
-                    if user_question.strip():
-                        # Prepare state with history for multi-turn
-                        state = {
-                            "question": user_question,
-                            "history": st.session_state.get('chat_history', []),
-                            "topk_file": 5,
-                            "topk_symbol": 5,
-                        }
-                        result = st.session_state.chatbot_graph.invoke(state)
-                        answer = result["answer"]
-                        references_files = [f["file_path"] for f in result.get("retrieved_files", [])]
-                        references_symbols = [s["symbol_name"] for s in result.get("retrieved_symbols", [])]
-                        # Save to chat history with full retrieved data for better links
-                        st.session_state.chat_history.append({
-                            "question": user_question,
-                            "answer": answer,
-                            "references_files": references_files,
-                            "references_symbols": references_symbols,
-                            "retrieved_files": result.get("retrieved_files", []),
-                            "retrieved_symbols": result.get("retrieved_symbols", []),
-                        })
-                        # Force rerun to switch to half-and-half layout
-                        st.rerun()
-    
+        st.markdown("---")
+        if selected_page and st.session_state.page_contents:
+            render_markdown_with_mermaid(st.session_state.page_contents[selected_page], selected_page)
+        else:
+            st.info("No documentation content available.")
+
 else:
     # Show different messages based on whether cache exists
     if github_url and github_url.strip():
-        # Use standardized cache location in root .cache directory
-        root_cache_dir = os.path.join("..", ".cache")  # Go up from core/ to root, then into .cache
-        repo_name = get_unique_cache_dir(github_url).split(os.sep)[-1]  # Extract repo name
+        root_cache_dir = os.path.join("..", ".cache")
+        repo_name = get_unique_cache_dir(github_url).split(os.sep)[-1]
         repo_dir = os.path.join(root_cache_dir, repo_name)
-        # Convert to absolute path to handle working directory issues
         repo_dir = os.path.abspath(repo_dir)
         wiki_pages_dir = os.path.join(repo_dir, "wiki_pages")
-        
         if os.path.exists(wiki_pages_dir):
             st.info(" Documentation exists in cache. Click **Generate Documentation** to load it, or check the **Regenerate Documentation** box to create fresh documentation.")
         else:
             st.info(" Enter a GitHub URL and click **Generate Documentation** to begin.")
     else:
         st.info(" Enter a GitHub URL and click **Generate Documentation** to begin.")
-
