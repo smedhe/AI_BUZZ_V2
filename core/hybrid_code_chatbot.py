@@ -159,28 +159,28 @@ def build_hybrid_code_chatbot_graph(embeddings_dir: str, model_name="Pro"):
     graph.set_entry_point("retrieve")
     return graph.compile()
  
-# --- Multi-turn Example Usage ---
-if __name__ == "__main__":
-    embeddings_dir = ".cache/embeddings/<graph_id>"
-    chatbot_graph = build_hybrid_code_chatbot_graph(embeddings_dir, model_name="Pro")
-    history = []
-    print("Hybrid Code Chatbot (multi-turn). Type your question, or just press Enter to exit.")
-    while True:
-        question = input("User: ").strip()
-        if not question:
-            print("Exiting chat.")
-            break
-        state = {
-            "question": question,
-            "history": history,
-            "topk_file": 5,
-            "topk_symbol": 5,
-        }
-        result = chatbot_graph.invoke(state)
-        answer = result["answer"]
-        print("Bot:", answer)
-        print("\nReferences (files):", [f["file_path"] for f in result["retrieved_files"]])
-        print("References (symbols):", [s["symbol_name"] for s in result["retrieved_symbols"]])
-        # Update history for context retention
-        history.append({"question": question, "answer": answer})
+# # --- Multi-turn Example Usage ---
+# if __name__ == "__main__":
+#     embeddings_dir = ".cache/embeddings/<graph_id>"
+#     chatbot_graph = build_hybrid_code_chatbot_graph(embeddings_dir, model_name="Pro")
+#     history = []
+#     print("Hybrid Code Chatbot (multi-turn). Type your question, or just press Enter to exit.")
+#     while True:
+#         question = input("User: ").strip()
+#         if not question:
+#             print("Exiting chat.")
+#             break
+#         state = {
+#             "question": question,
+#             "history": history,
+#             "topk_file": 5,
+#             "topk_symbol": 5,
+#         }
+#         result = chatbot_graph.invoke(state)
+#         answer = result["answer"]
+#         print("Bot:", answer)
+#         print("\nReferences (files):", [f["file_path"] for f in result["retrieved_files"]])
+#         print("References (symbols):", [s["symbol_name"] for s in result["retrieved_symbols"]])
+#         # Update history for context retention
+#         history.append({"question": question, "answer": answer})
  

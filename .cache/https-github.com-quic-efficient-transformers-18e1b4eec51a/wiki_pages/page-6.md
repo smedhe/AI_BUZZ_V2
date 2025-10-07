@@ -1,48 +1,57 @@
-# PEFT Model Testing
+# Core Architectural Components
 ## Overview
-PEFT (Parameter-Efficient Fine-Tuning) model testing is a crucial step in ensuring the reliability and performance of PEFT models. This section provides an overview of the testing process, key components, and concepts involved in PEFT model testing.
+The core architectural components of the QEfficient library are designed to optimize large language models (LLMs) for deployment on Qualcomm Cloud AI 100, enabling efficient inference and training. The library takes a model card from HuggingFace or a local model path as input and outputs an optimized model implementation for Cloud AI 100. This optimization process involves a series of transformations and modifications to the original model architecture, allowing it to leverage the capabilities of the Cloud AI 100 hardware.
+
+The QEfficient library is built on top of the HuggingFace Transformers library, which provides a wide range of pre-trained models and a unified interface for loading, exporting, and running these models. By extending the HuggingFace library, QEfficient is able to support a variety of model architectures and provide a seamless integration with the Cloud AI 100 platform.
 
 ## Key Components / Concepts
-The key components involved in PEFT model testing include:
-* `apply_peft` function: applies PEFT to a given Huggingface model if enabled in the training configuration.
-* `test_auto_peft_model_for_causal_lm_from_pretrained` function: tests the AutoPEFT model for causal language models by loading a pre-trained base model, adapting it with a PEFT adapter, and then loading the adapted model into a QEffAutoPeftModelForCausalLM instance.
-* `test_auto_peft_model_for_causal_lm_init` function: tests the initialization of the QEffAutoPeftModelForCausalLM class with different types of models for causal language models.
+The key components of the QEfficient library include:
+* **Reimplemented transformer blocks**: These blocks are designed to enable efficient on-device retention of intermediate states, reducing the memory footprint and improving the overall performance of the model.
+* **Graph transformations**: These transformations enable the execution of key operations in lower precision, which can significantly reduce the computational requirements and improve the efficiency of the model.
+* **Graph transformations to replace operations**: Some operations in the original model are replaced with mathematically equivalent operations that are more efficient or better supported on the Cloud AI 100 hardware.
+* **Handling for underflow and overflows**: The library includes mechanisms to handle underflow and overflows that may occur when operating in lower precision, ensuring the stability and accuracy of the model.
+* **Patcher modules**: These modules are used to manage precision issues and ensure that the model operates correctly even in situations where the precision of the input data may be limited.
 
 ## How it Works
-The testing process involves the following steps:
-1. Load a pre-trained base model and adapter configuration.
-2. Apply PEFT to the base model using the `apply_peft` function.
-3. Initialize a QEffAutoPeftModelForCausalLM instance with the adapted model.
-4. Test the initialization and loading of the model from pre-trained weights.
+The QEfficient library works by optimizing a given model for Cloud AI 100 through the `transform` function, which replaces the torch.nn.Module layers of the passed QEffModel with optimized implementations. The `QEFFAutoModel` class provides a unified interface for loading, exporting, compiling, and running various encoder-only transformer models on Cloud AI 100 hardware.
+
+The optimization process involves several steps:
+1. **Model loading**: The original model is loaded from a model card or a local path.
+2. **Model analysis**: The library analyzes the model architecture and identifies opportunities for optimization.
+3. **Transformation**: The library applies the necessary transformations to the model, including the implementation of efficient transformer blocks, graph transformations, and the replacement of operations.
+4. **Compilation**: The optimized model is compiled for execution on the Cloud AI 100 hardware.
+5. **Execution**: The optimized model is executed on the Cloud AI 100 hardware, performing inference or training as required.
 
 ## Example(s)
-An example of testing a PEFT model can be seen in the `test_auto_peft_model_for_causal_lm_from_pretrained` function:
+An example of using the QEfficient library is as follows:
 ```python
-def test_auto_peft_model_for_causal_lm_from_pretrained(base_config, adapter_config, tmp_path):
-    # Load pre-trained base model and adapter configuration
-    base_model = AutoModelForCausalLM.from_config(base_config)
-    # Apply PEFT to the base model
-    lora_model = get_peft_model(base_model, adapter_config)
-    # Initialize QEffAutoPeftModelForCausalLM instance
-    qeff_model = QEffAutoPeftModelForCausalLM(lora_model)
-    # Test the initialization and loading of the model
-    assert set(qeff_model.adapter_weights.keys()) == {adapter_config.adapter_name}
+from QEfficient import QEFFAutoModel
+from transformers import AutoTokenizer
+
+model = QEFFAutoModel.from_pretrained("sentence-transformers/all-MiniLM-L6-v2", pooling="mean")
+model.compile(num_cores=16)
+tokenizer = AutoTokenizer.from_pretrained("sentence-transformers/all-MiniLM-L6-v2")
+inputs = tokenizer("My name is", return_tensors="pt")
+output = model.generate(inputs)
+print(output)  # Output will be a dictionary containing extracted features.
 ```
+This example demonstrates how to load a pre-trained model, compile it for execution on the Cloud AI 100 hardware, and perform inference using the optimized model.
 
 ## Diagram(s)
 ```mermaid
-sequenceDiagram
-    participant Base Model as "Base Model"
-    participant PEFT Adapter as "PEFT Adapter"
-    participant QEffAutoPeftModelForCausalLM as "QEffAutoPeftModelForCausalLM"
-    Note over Base Model,PEFT Adapter: Load pre-trained base model and adapter configuration
-    Base Model->>PEFT Adapter: Apply PEFT to base model
-    PEFT Adapter->>QEffAutoPeftModelForCausalLM: Initialize QEffAutoPeftModelForCausalLM instance
-    Note over QEffAutoPeftModelForCausalLM: Test initialization and loading of model
+flowchart LR
+    A[Model Input] -->|Model Card or Local Path|> B(QEfficient Library)
+    B -->|Optimized Model|> C[Cloud AI 100]
+    C -->|Inference/Training|> D[Output]
+    B -->|Model Analysis|> E[Transformation]
+    E -->|Optimized Model|> B
+    style B fill:#f9f,stroke:#333,stroke-width:4px
+    style E fill:#ccc,stroke:#333,stroke-width:4px
 ```
-Caption: Sequence diagram of PEFT model testing process
+The diagram illustrates the high-level workflow of the QEfficient library, where a model input is passed to the library, which optimizes the model for Cloud AI 100 and then performs inference or training to produce the output. The diagram also highlights the key components of the library, including the model analysis and transformation steps.
 
 ## References
-* `tests/peft/test_peft_model.py`
+* `QEfficient/transformers/models/modeling_auto.py`
+* `QEfficient/transformers/transform.py`
+* `docs/source/introduction.md`
 * `tests/transformers/models/test_causal_lm_models.py`
-* `QEfficient/transformers/models/llava_next/modeling_llava_next.py`
